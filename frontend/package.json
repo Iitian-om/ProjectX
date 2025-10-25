@@ -5,29 +5,30 @@
   "description": "ProjectX is a lightweight productivity MVP to manage timetables, tasks, reminders, and calendar integrations using a Next.js frontend and n8n workflows.",
   "license": "ISC",
   "author": "ProJectX Coporation ltd",
-  "type": "commonjs",
+  "type": "module",
   "main": "index.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
     "dev": "next dev",
+    "dev:turbo": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "^14.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "axios": "^1.6.0",
-    "date-fns": "^2.30.0"
+    "date-fns": "^2.30.0",
+    "next": "^16.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.31",
-    "tailwindcss": "^3.3.5",
     "eslint": "^8.54.0",
-    "eslint-config-next": "^14.0.0"
+    "eslint-config-next": "^14.0.0",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5"
   }
 }

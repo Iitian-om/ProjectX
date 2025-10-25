@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 10, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Ayush/Desktop/Side%20projects/ProjectX/frontend/pages/index.js"],"sourcesContent":["export default function Home() {\r\n  return (\r\n    <main>\r\n      <h1>Welcome to ProjectX 🚀</h1>\r\n      <p>Your productivity hub is alive!</p>\r\n    </main>\r\n  );\r\n}\r\n"],"names":[],"mappings":";;;;;;AAAe,SAAS;IACtB,qBACE,qKAAC;;0BACC,qKAAC;0BAAG;;;;;;0BACJ,qKAAC;0BAAE;;;;;;;;;;;;AAGT","debugId":null}}]
+}

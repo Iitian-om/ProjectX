@@ -2,11 +2,11 @@
 
 ## 1️⃣ MVP Roadmap
 
-### Phase 0: Setup & Initial Planning 
+### Phase 0: Setup & Initial Planning ✅ COMPLETED
 
 Goals:
-- Setup project repository and folder structure.
-- Configure Next.js for frontend and PWA support.
+- Setup project repository and folder structure. (completed)
+- Configure Next.js for frontend and PWA support. (completed)
 - Configure n8n environment (cloud or self-hosted).
 - Choose database (MongoDB or MySQL) and configure.
 
@@ -14,6 +14,14 @@ Deliverables:
 - GitHub repo with `frontend/` and `n8n/` folders.
 - `.env` files for API keys (Twilio, Email, Google/Outlook integration).
 - ProjectX documentation folder structure created (`docs/`).
+
+**Status Update:**
+- ✅ Next.js 15+ installed and configured in `frontend/` directory
+- ✅ React 19.2.0 and React-DOM 19.2.0 upgraded
+- ✅ Project structure established with separated frontend workspace
+- ✅ TailwindCSS configured for styling
+- ✅ Basic landing page (`index.js`) created
+- ✅ Documentation structure in `docs/` folder complete
 
 ---
 
@@ -137,11 +145,13 @@ MD Documentation:
 
 ---
 
-## 2️⃣ Folder Structure (Suggested)
+## 2️⃣ Folder Structure (Current)
 
 ```bash
 ProjectX/
 ├── frontend/
+│   ├── package.json          # Next.js 15+ project config
+│   ├── .env.local            # Environment variables
 │   ├── pages/
 │   │   ├── index.js          # Landing Page
 │   │   ├── timetable.js      # Timetable
@@ -153,6 +163,8 @@ ProjectX/
 │   ├── styles/
 │   │   ├── globals.css
 │   │   ├── responsive.css
+│   ├── public/               # Static assets
+│   ├── .next/                # Build output (auto-generated)
 ├── n8n/
 │   ├── workflows/            # All workflows JSON files
 │   ├── nodes/                # Custom nodes if needed
@@ -165,9 +177,9 @@ ProjectX/
 │   ├── Phase5_CalendarIntegration.md
 │   ├── Phase6_Analytics_PWA.md
 │   ├── Phase7_Testing.md
-├── package.json
+│   ├── README.md
 ├── README.md
-└── .env 
+└── .gitignore
 ```
 
 3️⃣ PRD Template for Each Phase (.md)
@@ -196,7 +208,9 @@ Create a responsive landing page and timetable that displays upcoming deadlines,
 3. Mobile-first design.
 
 ## Tech Stack
-- Next.js + TailwindCSS
+- **Next.js 15+** (App Router ready, React 19.2.0)
+- **TailwindCSS** for styling
+- **React 19.2.0** with latest features
 - Mock data initially, later fetch from n8n workflow APIs.
 
 ## Acceptance Criteria
@@ -211,10 +225,35 @@ This same structure applies to each phase, updating features, workflows, UI mock
 
 4️⃣ Next Steps
 
-- Setup Next.js frontend and PWA support.
-- Build landing page + timetable page with mock data.
-- Start documenting Phase 1 PRD (Phase1_Timetable.md).
-- Deploy initial frontend on Vercel (even personal test deployment).
-- Later, integrate n8n workflows for automation.
+- ✅ Setup Next.js frontend (Next.js 15+ with React 19)
+- ✅ Basic landing page created
+- 🔄 Build full landing page + timetable page with mock data
+- 🔄 Complete Phase 1 PRD documentation
+- ⏳ Deploy initial frontend on Vercel (even personal test deployment)
+- ⏳ Later, integrate n8n workflows for automation
+
+## 5️⃣ Development Commands
+
+### Frontend Development
+```bash
+cd frontend
+npm run dev      # Start development server (http://localhost:3000)
+npm run build    # Build for production
+npm run start    # Start production server
+npm run lint     # Run ESLint
+```
+
+### Installing Dependencies
+```bash
+cd frontend
+npm install      # Install all dependencies
+```
+
+## 6️⃣ Current Tech Stack Versions
+- **Next.js:** 16.0.0 (Latest)
+- **React:** 19.2.0
+- **React-DOM:** 19.2.0
+- **TailwindCSS:** 3.3.5
+- **Node.js:** Compatible with Next.js 15+ requirements
 
 <!-- End of file -->

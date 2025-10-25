@@ -58,11 +58,18 @@ ProjectX evolves into a SaaS platform offering:
 ## 7. Tech Summary
 | Layer | Stack |
 |-------|-------|
-| Frontend | Next.js, TailwindCSS, Framer Motion |
+| Frontend | Next.js 15+, React 19.2.0, TailwindCSS 3.3.5, Framer Motion |
 | Backend / Automation | n8n |
 | Database | MongoDB or MySQL |
 | Notifications | n8n with SendGrid, Twilio, Web Push |
 | Hosting | Vercel (frontend), n8n Cloud or Render (automation) |
+| Dev Tools | ESLint, PostCSS, Autoprefixer |
+
+**Current Setup Status (Oct 2025):**
+- ✅ Next.js 16.0.0 (upgraded from 14.x)
+- ✅ React 19.2.0 with React-DOM 19.2.0
+- ✅ TailwindCSS configured
+- ✅ Project restructured with `frontend/` as main workspace
 
 ---
 

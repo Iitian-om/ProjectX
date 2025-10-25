@@ -18,9 +18,24 @@ Develop a professional landing page and a responsive timetable page that display
 4. Navigation bar linking to Dashboard and To-Do Panel.
 
 ## Technical Stack
-- Next.js + TailwindCSS  
-- Framer Motion for animations  
-- Static mock data for first build (later dynamic from n8n).
+- **Next.js 15+** (v16.0.0 currently installed)
+- **React 19.2.0** with latest React features
+- **TailwindCSS 3.3.5** for responsive styling  
+- **Framer Motion** for animations (to be added)
+- Static mock data for first build (later dynamic from n8n)
+
+**Project Structure:**
+```
+frontend/
+├── package.json          # Next.js project config
+├── pages/
+│   ├── index.js          # Landing Page
+│   └── timetable.js      # Timetable (to be created)
+├── components/           # Reusable components
+├── styles/
+│   └── globals.css
+└── public/               # Static assets
+```
 
 ## Acceptance Criteria
 - Timetable displays at least 5 mock events.  
