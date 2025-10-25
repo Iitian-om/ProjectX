@@ -9,4 +9,6 @@ node_modules/
 /build
 /dist 
 
+# Ignore Next.js build output
 frontend/.next
+frontend/.next/

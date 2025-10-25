@@ -156,7 +156,7 @@ This project is licensed under the ISC License.
 
 ## 👥 Authors
 
-**ProjectX Corporation Ltd**
+**ProjectX Corporation Ltd** : Currently only Om Kumar @Iitian-om 
 
 ## 🔗 Links
 
