@@ -87,7 +87,7 @@ export default function handler(req, res) {
       },
       {
         id: 8,
-        title: 'Study Group Session',
+        title: 'Group Study Session',
         description: 'Prepare for OS midterm',
         startTime: getRelativeDate(4, 18, 0),
         endTime: getRelativeDate(4, 20, 0),

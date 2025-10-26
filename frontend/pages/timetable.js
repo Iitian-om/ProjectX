@@ -102,19 +102,19 @@ export default function Timetable() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white">
+    <div className="min-h-screen bg-background text-textPrimary">
       {/* Navigation */}
-      <nav className="container mx-auto px-6 py-4 flex justify-between items-center border-b border-gray-800">
+      <nav className="container mx-auto px-6 py-4 flex justify-between items-center border-b border-highlight">
         <div className="text-2xl font-bold">
-          <Link href="/" className="hover:text-blue-400 transition-colors">
-            <span className="text-blue-400">ProjectX</span>
+          <Link href="/" className="hover:text-accent transition-colors">
+            <span className="text-accent">ProjectX</span>
           </Link>
         </div>
         <div className="flex items-center space-x-4">
-          <Link href="/" className="text-gray-300 hover:text-blue-400 transition-colors">
+          <Link href="/" className="text-textSecondary hover:text-accent transition-colors">
             Home
           </Link>
-          <span className="text-blue-400 font-semibold">Timetable</span>
+          <span className="text-accent font-semibold">Timetable</span>
         </div>
       </nav>
 
@@ -124,14 +124,14 @@ export default function Timetable() {
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Your Timetable 📅
           </h1>
-          <p className="text-gray-400 text-lg">
+          <p className="text-textSecondary text-lg">
             All your events, classes, and deadlines in one place
           </p>
         </div>
 
         {/* Upcoming Deadlines Alert */}
         {upcomingDeadlines.length > 0 && (
-          <div className="mb-8 bg-red-900 bg-opacity-30 border-2 border-red-500 rounded-xl p-6">
+          <div className="mb-8 bg-surface border-2 border-danger rounded-xl p-6">
             <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
               ⚠️ Upcoming Deadlines
             </h2>
@@ -139,13 +139,13 @@ export default function Timetable() {
               {upcomingDeadlines.map(deadline => {
                 const deadlineDate = safeParseEventDate(deadline.startTime);
                 return (
-                  <div key={deadline.id} className="bg-gray-900 bg-opacity-50 p-4 rounded-lg">
+                  <div key={deadline.id} className="bg-background p-4 rounded-lg">
                     <div className="flex justify-between items-start">
                       <div>
                         <h3 className="font-bold text-lg">{deadline.title}</h3>
-                        <p className="text-gray-400">{deadline.description}</p>
+                        <p className="text-textSecondary">{deadline.description}</p>
                       </div>
-                      <span className="text-red-400 font-semibold">
+                      <span className="text-danger font-semibold">
                         {deadlineDate ? format(deadlineDate, 'MMM dd, h:mm a') : 'Invalid date'}
                       </span>
                     </div>
@@ -162,8 +162,8 @@ export default function Timetable() {
             onClick={() => setFilter('all')}
             className={`px-4 py-2 rounded-lg transition-all ${
               filter === 'all'
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                ? 'bg-accent text-background'
+                : 'bg-surface text-textSecondary hover:bg-highlight border border-highlight'
             }`}
           >
             All Events
@@ -172,8 +172,8 @@ export default function Timetable() {
             onClick={() => setFilter('upcoming')}
             className={`px-4 py-2 rounded-lg transition-all ${
               filter === 'upcoming'
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                ? 'bg-accent text-background'
+                : 'bg-surface text-textSecondary hover:bg-highlight border border-highlight'
             }`}
           >
             Upcoming (7 days)
@@ -182,8 +182,8 @@ export default function Timetable() {
             onClick={() => setFilter('deadlines')}
             className={`px-4 py-2 rounded-lg transition-all ${
               filter === 'deadlines'
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                ? 'bg-danger text-white'
+                : 'bg-surface text-textSecondary hover:bg-highlight border border-highlight'
             }`}
           >
             Deadlines Only
@@ -192,8 +192,8 @@ export default function Timetable() {
             onClick={() => setFilter('college')}
             className={`px-4 py-2 rounded-lg transition-all ${
               filter === 'college'
-                ? 'bg-purple-500 text-white'
-                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                ? 'bg-accent text-background'
+                : 'bg-surface text-textSecondary hover:bg-highlight border border-highlight'
             }`}
           >
             College
@@ -202,8 +202,8 @@ export default function Timetable() {
             onClick={() => setFilter('google')}
             className={`px-4 py-2 rounded-lg transition-all ${
               filter === 'google'
-                ? 'bg-green-500 text-white'
-                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                ? 'bg-success text-white'
+                : 'bg-surface text-textSecondary hover:bg-highlight border border-highlight'
             }`}
           >
             Google Calendar
@@ -212,8 +212,8 @@ export default function Timetable() {
             onClick={() => setFilter('outlook')}
             className={`px-4 py-2 rounded-lg transition-all ${
               filter === 'outlook'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                ? 'bg-[#F77F00] text-white'
+                : 'bg-surface text-textSecondary hover:bg-highlight border border-highlight'
             }`}
           >
             Outlook
@@ -222,8 +222,8 @@ export default function Timetable() {
             onClick={() => setFilter('manual')}
             className={`px-4 py-2 rounded-lg transition-all ${
               filter === 'manual'
-                ? 'bg-gray-600 text-white'
-                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                ? 'bg-highlight text-textPrimary'
+                : 'bg-surface text-textSecondary hover:bg-highlight border border-highlight'
             }`}
           >
             Manual Entries
@@ -232,39 +232,39 @@ export default function Timetable() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-gray-800 bg-opacity-50 p-4 rounded-lg border border-gray-700">
-            <div className="text-3xl font-bold text-blue-400">{events.length}</div>
-            <div className="text-gray-400 text-sm">Total Events</div>
+          <div className="bg-surface p-4 rounded-lg border border-highlight">
+            <div className="text-3xl font-bold text-accent">{events.length}</div>
+            <div className="text-textSecondary text-sm">Total Events</div>
           </div>
-          <div className="bg-gray-800 bg-opacity-50 p-4 rounded-lg border border-gray-700">
-            <div className="text-3xl font-bold text-purple-400">
+          <div className="bg-surface p-4 rounded-lg border border-highlight">
+            <div className="text-3xl font-bold text-accent">
               {events.filter(e => e.source === 'college').length}
             </div>
-            <div className="text-gray-400 text-sm">College Events</div>
+            <div className="text-textSecondary text-sm">College Events</div>
           </div>
-          <div className="bg-gray-800 bg-opacity-50 p-4 rounded-lg border border-gray-700">
-            <div className="text-3xl font-bold text-red-400">
+          <div className="bg-surface p-4 rounded-lg border border-highlight">
+            <div className="text-3xl font-bold text-danger">
               {events.filter(e => e.type === 'deadline').length}
             </div>
-            <div className="text-gray-400 text-sm">Deadlines</div>
+            <div className="text-textSecondary text-sm">Deadlines</div>
           </div>
-          <div className="bg-gray-800 bg-opacity-50 p-4 rounded-lg border border-gray-700">
-            <div className="text-3xl font-bold text-gray-400">
+          <div className="bg-surface p-4 rounded-lg border border-highlight">
+            <div className="text-3xl font-bold text-textSecondary">
               {events.filter(e => e.source === 'manual').length}
             </div>
-            <div className="text-gray-400 text-sm">Manual Entries</div>
+            <div className="text-textSecondary text-sm">Manual Entries</div>
           </div>
         </div>
 
         {/* Events List */}
         {loading ? (
           <div className="text-center py-12">
-            <div className="text-xl text-gray-400">Loading events...</div>
+            <div className="text-xl text-textSecondary">Loading events...</div>
           </div>
         ) : sortedEvents.length === 0 ? (
-          <div className="text-center py-12 bg-gray-800 bg-opacity-50 rounded-xl border border-gray-700">
-            <div className="text-xl text-gray-400 mb-2">No events found</div>
-            <p className="text-gray-500">Try adjusting your filters</p>
+          <div className="text-center py-12 bg-surface rounded-xl border border-highlight">
+            <div className="text-xl text-textPrimary mb-2">No events found</div>
+            <p className="text-textSecondary">Try adjusting your filters</p>
           </div>
         ) : (
           <div className="space-y-8">
@@ -286,14 +286,14 @@ export default function Timetable() {
 
         {/* Add Event Button */}
         <div className="mt-12 text-center">
-          <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
+          <button className="bg-accent hover:bg-[#B89658] text-background font-semibold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
             + Add Manual Event
           </button>
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="container mx-auto px-6 py-8 mt-12 text-center text-sm text-gray-500 border-t border-gray-800">
+      <footer className="container mx-auto px-6 py-8 mt-12 text-center text-sm text-textSecondary border-t border-highlight">
         <p>© {new Date().getFullYear()} ProjectX Corporation Ltd. All rights reserved.</p>
       </footer>
     </div>
