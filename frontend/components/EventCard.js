@@ -1,4 +1,4 @@
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, isValid } from 'date-fns';
 
 export default function EventCard({ event }) {
   const sourceColors = {
@@ -27,11 +27,16 @@ export default function EventCard({ event }) {
   
   try {
     const startDate = parseISO(event.startTime);
+    if (!isValid(startDate)) {
+      throw new Error('Invalid start date');
+    }
     startTimeFormatted = format(startDate, 'MMM dd, yyyy • h:mm a');
     
     if (event.startTime !== event.endTime) {
       const endDate = parseISO(event.endTime);
-      endTimeFormatted = ` - ${format(endDate, 'h:mm a')}`;
+      if (isValid(endDate)) {
+        endTimeFormatted = ` - ${format(endDate, 'h:mm a')}`;
+      }
     }
   } catch (error) {
     console.error('Error parsing event date:', error);

@@ -40,10 +40,11 @@ export default function Timetable() {
     }
   };
 
-  // Helper function to check if event is within date range
+  // Helper function to check if event is within date range (inclusive)
   const isEventInDateRange = (eventDate, startDate, endDate) => {
     if (!eventDate) return false;
-    return isAfter(eventDate, startDate) && isBefore(eventDate, endDate);
+    return (isAfter(eventDate, startDate) || eventDate.getTime() === startDate.getTime()) && 
+           (isBefore(eventDate, endDate) || eventDate.getTime() === endDate.getTime());
   };
 
   // Filter events
