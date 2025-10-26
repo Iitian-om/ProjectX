@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import EventCard from '../components/EventCard';
-import { format, parseISO, isAfter, isBefore, addDays } from 'date-fns';
+import { format, parseISO, isAfter, isBefore, addDays, isValid } from 'date-fns';
 
 export default function Timetable() {
   const [events, setEvents] = useState([]);
@@ -25,27 +25,57 @@ export default function Timetable() {
     }
   };
 
+  // Helper function to safely parse event date with validation
+  const safeParseEventDate = (dateString) => {
+    try {
+      const parsed = parseISO(dateString);
+      if (!isValid(parsed)) {
+        console.warn('Invalid date:', dateString);
+        return null;
+      }
+      return parsed;
+    } catch (error) {
+      console.error('Error parsing date:', dateString, error);
+      return null;
+    }
+  };
+
+  // Helper function to check if event is within date range
+  const isEventInDateRange = (eventDate, startDate, endDate) => {
+    if (!eventDate) return false;
+    return isAfter(eventDate, startDate) && isBefore(eventDate, endDate);
+  };
+
   // Filter events
   const filteredEvents = events.filter(event => {
     if (filter === 'all') return true;
     if (filter === 'deadlines') return event.type === 'deadline';
     if (filter === 'upcoming') {
-      const eventDate = parseISO(event.startTime);
+      const eventDate = safeParseEventDate(event.startTime);
+      if (!eventDate) return false;
       const now = new Date();
       const weekFromNow = addDays(now, 7);
-      return isAfter(eventDate, now) && isBefore(eventDate, weekFromNow);
+      return isEventInDateRange(eventDate, now, weekFromNow);
     }
     return event.source === filter;
   });
 
   // Sort events by date
   const sortedEvents = [...filteredEvents].sort((a, b) => {
-    return new Date(a.startTime) - new Date(b.startTime);
+    const dateA = safeParseEventDate(a.startTime);
+    const dateB = safeParseEventDate(b.startTime);
+    if (!dateA && !dateB) return 0;
+    if (!dateA) return 1;
+    if (!dateB) return -1;
+    return dateA - dateB;
   });
 
   // Group events by date
   const groupedEvents = sortedEvents.reduce((groups, event) => {
-    const date = format(parseISO(event.startTime), 'yyyy-MM-dd');
+    const eventDate = safeParseEventDate(event.startTime);
+    if (!eventDate) return groups;
+    
+    const date = format(eventDate, 'yyyy-MM-dd');
     if (!groups[date]) {
       groups[date] = [];
     }
@@ -56,11 +86,19 @@ export default function Timetable() {
   // Get upcoming deadlines (next 7 days)
   const upcomingDeadlines = events.filter(event => {
     if (event.type !== 'deadline') return false;
-    const eventDate = parseISO(event.startTime);
+    const eventDate = safeParseEventDate(event.startTime);
+    if (!eventDate) return false;
     const now = new Date();
     const weekFromNow = addDays(now, 7);
-    return isAfter(eventDate, now) && isBefore(eventDate, weekFromNow);
-  }).sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+    return isEventInDateRange(eventDate, now, weekFromNow);
+  }).sort((a, b) => {
+    const dateA = safeParseEventDate(a.startTime);
+    const dateB = safeParseEventDate(b.startTime);
+    if (!dateA && !dateB) return 0;
+    if (!dateA) return 1;
+    if (!dateB) return -1;
+    return dateA - dateB;
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white">
@@ -97,19 +135,22 @@ export default function Timetable() {
               ⚠️ Upcoming Deadlines
             </h2>
             <div className="space-y-3">
-              {upcomingDeadlines.map(deadline => (
-                <div key={deadline.id} className="bg-gray-900 bg-opacity-50 p-4 rounded-lg">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-bold text-lg">{deadline.title}</h3>
-                      <p className="text-gray-400">{deadline.description}</p>
+              {upcomingDeadlines.map(deadline => {
+                const deadlineDate = safeParseEventDate(deadline.startTime);
+                return (
+                  <div key={deadline.id} className="bg-gray-900 bg-opacity-50 p-4 rounded-lg">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-bold text-lg">{deadline.title}</h3>
+                        <p className="text-gray-400">{deadline.description}</p>
+                      </div>
+                      <span className="text-red-400 font-semibold">
+                        {deadlineDate ? format(deadlineDate, 'MMM dd, h:mm a') : 'Invalid date'}
+                      </span>
                     </div>
-                    <span className="text-red-400 font-semibold">
-                      {format(parseISO(deadline.startTime), 'MMM dd, h:mm a')}
-                    </span>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}

@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 
 export default function EventCard({ event }) {
   const sourceColors = {
@@ -20,6 +20,23 @@ export default function EventCard({ event }) {
 
   const isDeadline = event.type === 'deadline';
   const isPriority = event.priority === 'high';
+
+  // Safe date parsing
+  let startTimeFormatted = '';
+  let endTimeFormatted = '';
+  
+  try {
+    const startDate = parseISO(event.startTime);
+    startTimeFormatted = format(startDate, 'MMM dd, yyyy • h:mm a');
+    
+    if (event.startTime !== event.endTime) {
+      const endDate = parseISO(event.endTime);
+      endTimeFormatted = ` - ${format(endDate, 'h:mm a')}`;
+    }
+  } catch (error) {
+    console.error('Error parsing event date:', error);
+    startTimeFormatted = 'Invalid date';
+  }
 
   return (
     <div 
@@ -48,10 +65,7 @@ export default function EventCard({ event }) {
         <div className="flex items-center gap-2">
           <span>🕐</span>
           <span>
-            {format(new Date(event.startTime), 'MMM dd, yyyy • h:mm a')}
-            {event.startTime !== event.endTime && 
-              ` - ${format(new Date(event.endTime), 'h:mm a')}`
-            }
+            {startTimeFormatted}{endTimeFormatted}
           </span>
         </div>
         
