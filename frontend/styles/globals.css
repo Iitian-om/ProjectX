@@ -1,5 +1,4 @@
 /* Global styles */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities; 
@@ -10,7 +9,6 @@
     background-size: 200% 200%;
     animation: gradient 4s ease infinite;
   }
-
   @keyframes gradient {
     0%, 100% {
       background-position: 0% 50%;
@@ -19,4 +17,4 @@
       background-position: 100% 50%;
     }
   }
-} 
+}
