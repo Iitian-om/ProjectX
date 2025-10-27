@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import EventCard from '../components/EventCard';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import { format, parseISO, isAfter, isBefore, addDays, isValid } from 'date-fns';
 
 export default function Timetable() {
@@ -104,19 +106,7 @@ export default function Timetable() {
   return (
     <div className="min-h-screen bg-background text-textPrimary">
       {/* Navigation */}
-      <nav className="container mx-auto px-6 py-4 flex justify-between items-center border-b border-highlight">
-        <div className="text-2xl font-bold">
-          <Link href="/" className="hover:text-accent transition-colors">
-            <span className="text-accent">ProjectX</span>
-          </Link>
-        </div>
-        <div className="flex items-center space-x-4">
-          <Link href="/" className="text-textSecondary hover:text-accent transition-colors">
-            Home
-          </Link>
-          <span className="text-accent font-semibold">Timetable</span>
-        </div>
-      </nav>
+      <Navbar showHome={true} />
 
       <div className="container mx-auto px-6 py-8">
         {/* Header */}
@@ -293,9 +283,7 @@ export default function Timetable() {
       </div>
 
       {/* Footer */}
-      <footer className="container mx-auto px-6 py-8 mt-12 text-center text-sm text-textSecondary border-t border-highlight">
-        <p>© {new Date().getFullYear()} ProjectX Corporation Ltd. All rights reserved.</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
