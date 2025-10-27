@@ -12,6 +12,7 @@ export default {
         background: '#1C1F24', // Charcoal-steel base
         surface: '#2A2F35',    // Slightly lighter panel color
         accent: '#C7A76C',     // Brass-gold accent
+        border: '#3E4651',     // Graphite border
         highlight: '#3E4651',  // Graphite highlight
         textPrimary: '#EAEAEA', // Main readable text
         textSecondary: '#9FA6B2', // Muted text for subheads
