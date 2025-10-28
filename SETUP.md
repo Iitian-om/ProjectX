@@ -106,9 +106,16 @@ found 0 vulnerabilities
 ### Create `.env.local` in `frontend/`
 
 ```bash
+# n8n Automation Configuration (Phase 0 - Active)
+NEXT_PUBLIC_N8N_WEBHOOK_URL=https://iitian-om.app.n8n.cloud/webhook-test/projectx/sync
+
 # API Configuration
 NEXT_PUBLIC_API_URL=http://localhost:3000/api
-NEXT_PUBLIC_N8N_WEBHOOK_URL=https://your-n8n-instance.com/webhook
+
+# Database (Phase 0 - Pending)
+DATABASE_URL=mongodb://localhost:27017/projectx
+# or
+DATABASE_URL=mysql://user:password@localhost:3306/projectx
 
 # External Integrations (Phase 5+)
 GOOGLE_CLIENT_ID=your_google_client_id
@@ -121,11 +128,52 @@ SENDGRID_API_KEY=your_sendgrid_key
 TWILIO_ACCOUNT_SID=your_twilio_sid
 TWILIO_AUTH_TOKEN=your_twilio_token
 TWILIO_PHONE_NUMBER=+1234567890
+```
 
-# Database (Phase 2+)
-DATABASE_URL=mongodb://localhost:27017/projectx
-# or
-DATABASE_URL=mysql://user:password@localhost:3306/projectx
+### n8n Webhook Integration
+
+**Current Setup (Oct 28, 2025):**
+- **n8n Cloud URL:** `https://iitian-om.app.n8n.cloud`
+- **Webhook Endpoint:** `/webhook-test/projectx/sync`
+- **Status:** ✅ Configured and tested (200 OK)
+
+**Testing the Webhook (PowerShell):**
+```powershell
+Invoke-WebRequest `
+  -Uri "https://iitian-om.app.n8n.cloud/webhook-test/projectx/sync" `
+  -Method POST `
+  -ContentType "application/json" `
+  -Body '{"title":"Test Event","type":"meeting","source":"manual","priority":"high"}'
+```
+
+**Expected Response:**
+```json
+{
+  "message": "Workflow was started",
+  "statusCode": 200
+}
+```
+
+**Frontend Integration Example:**
+```javascript
+// pages/api/events.js or client-side fetch
+export default async function handler(req, res) {
+  const webhookUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL;
+  
+  const response = await fetch(webhookUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      title: req.body.title,
+      type: req.body.type || 'event',
+      source: 'frontend',
+      priority: req.body.priority || 'normal',
+    })
+  });
+  
+  const data = await response.json();
+  res.status(200).json(data);
+}
 ```
 
 ---
@@ -230,13 +278,89 @@ npm run lint -- --fix
 
 ---
 
-## n8n Setup (Coming Soon)
+## n8n Automation Setup ✅
 
-Will be configured in future phases for:
-- Workflow automation
-- API integrations
-- Notification scheduling
-- Calendar syncing
+**Status:** Phase 0 - Configured and tested (Oct 28, 2025)
+
+### Cloud Configuration
+
+**n8n Instance:**
+- **Platform:** n8n Cloud (managed service)
+- **URL:** `https://iitian-om.app.n8n.cloud`
+- **Webhook Endpoint:** `/webhook-test/projectx/sync`
+
+**Why Cloud vs Local:**
+- ✅ No maintenance overhead
+- ✅ Always accessible
+- ✅ Free tier sufficient for MVP
+- ✅ Production-ready from day one
+- ✅ Built-in monitoring and logs
+
+### Workflow Configuration
+
+**Current Function Node:**
+```javascript
+// n8n Function Node: Process Event Data
+const data = $json || {};
+
+return [
+  {
+    json: {
+      title: data.title || "Untitled Event",
+      type: data.type || "unknown",
+      source: data.source || "manual",
+      priority: data.priority || "normal",
+      receivedAt: new Date().toISOString()
+    }
+  }
+];
+```
+
+**Supported Event Types:**
+- `meeting` - Scheduled meetings
+- `task` - Tasks and assignments
+- `reminder` - Notification reminders
+- `deadline` - Project deadlines
+- `class` - Academic classes
+- `event` - General events
+
+**Priority Levels:**
+- `urgent` - Requires immediate attention
+- `high` - Important tasks
+- `normal` - Standard priority (default)
+- `low` - Can be deferred
+
+### Testing & Validation
+
+**Test Command (PowerShell):**
+```powershell
+Invoke-WebRequest `
+  -Uri "https://iitian-om.app.n8n.cloud/webhook-test/projectx/sync" `
+  -Method POST `
+  -ContentType "application/json" `
+  -Body '{"title":"Team Meeting","type":"meeting","priority":"high"}'
+```
+
+**Test Results:**
+- ✅ Webhook responds with 200 OK
+- ✅ JSON payload processed correctly
+- ✅ Function node executes successfully
+- ✅ Timestamp auto-generated
+
+### Architecture Flow
+
+```
+┌──────────────┐      POST /webhook      ┌──────────────┐      Save      ┌──────────────┐
+│   Frontend   │─────────────────────────▶│   n8n Cloud  │───────────────▶│   Database   │
+│  (Next.js)   │◀─────────────────────────│  (Webhooks)  │◀───────────────│  (MongoDB)   │
+└──────────────┘      Response 200        └──────────────┘   Query Data   └──────────────┘
+```
+
+### Next Steps
+- [ ] Connect n8n to database (MongoDB Atlas)
+- [ ] Add database write nodes to workflow
+- [ ] Implement notification nodes (Phase 3)
+- [ ] Add calendar integration workflows (Phase 5)
 
 ---
 
@@ -244,6 +368,7 @@ Will be configured in future phases for:
 
 | Date | Version | Changes |
 |------|---------|---------|
+| Oct 28, 2025 | 1.3.0 | Phase 0 (Part 1): n8n Cloud configured, webhook tested, automation layer ready |
 | Oct 27, 2025 | 1.2.0 | Phase 1 complete: 8 pages, component architecture, Industrial Dusk theme |
 | Oct 26, 2025 | 1.1.0 | UI/UX overhaul, homepage redesign, theme implementation |
 | Oct 25, 2025 | 1.0.0 | Initial setup with Next.js 16.0.0, React 19.2.0 |
@@ -273,5 +398,6 @@ For issues or questions:
 
 ---
 
-*Last Updated: October 27, 2025*  
-*Phase 1 Complete - Component architecture and UI foundation ready*
+*Last Updated: October 28, 2025*  
+*Phase 0 (Part 1) Complete - n8n automation layer configured and tested*  
+*Next: Database integration (MongoDB Atlas)*

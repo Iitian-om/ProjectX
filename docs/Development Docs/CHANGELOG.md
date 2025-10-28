@@ -7,6 +7,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.3.0] - 2025-10-28
+
+### Added - n8n Cloud Integration ✅
+**Phase 0 Progress:** Automation layer configured and tested
+
+#### n8n Automation Setup
+- **n8n Cloud Account:** Created and configured at `iitian-om.app.n8n.cloud`
+- **Webhook Endpoint:** `https://iitian-om.app.n8n.cloud/webhook-test/projectx/sync`
+  - Successfully tested with PowerShell (StatusCode: 200)
+  - Confirmed workflow triggers externally via API
+
+#### Workflow Configuration
+- **Function Node Created:** Event processing with structured data handling
+  ```javascript
+  // Processes incoming events with fallback values
+  const data = $json || {};
+  return [{
+    json: {
+      title: data.title || "Untitled Event",
+      type: data.type || "unknown",
+      source: data.source || "manual",
+      priority: data.priority || "normal",
+      receivedAt: new Date().toISOString()
+    }
+  }];
+  ```
+
+- **Test Results:**
+  - External webhook trigger: ✅ Working (200 OK)
+  - JSON payload processing: ✅ Validated
+  - Function node execution: ✅ Confirmed
+
+#### Architecture Updates
+- Updated system architecture to three-layer model:
+  ```
+  Frontend (Next.js) ←→ n8n Cloud ←→ Database (TBD)
+  ```
+- n8n handles: webhooks, task automation, scheduling, and API integrations
+- Cloud-based setup chosen for MVP (faster deployment, no maintenance overhead)
+
+#### Next Steps
+- ⏳ Phase 0 (Part 2): Database integration (MongoDB Atlas recommended)
+- Environment variable setup for webhook URL
+- Frontend integration with n8n webhook endpoint
+
+---
+
 ## [1.2.0] - 2025-10-27
 
 ### Added - Component Architecture & New Pages 🎉

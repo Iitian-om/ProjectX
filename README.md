@@ -6,17 +6,28 @@ ProjectX is a productivity MVP that manages timetables, tasks, reminders, and ca
 
 ## 🚀 Current Status
 
-- ✅ **Phase 0 Complete** - Next.js 16.0.0 & React 19.2.0 setup
-- ✅ **Phase 1 Complete** - Landing page, timetable, and component architecture
-- ✅ **Industrial Dusk Theme** - Custom dark theme with brass-gold accents
-- ✅ **8 Pages Delivered** - Home, Timetable, Sitemap, About, Terms, Privacy, Integrations, Pricing
-- ✅ **Component Architecture** - Reusable Navbar, Footer, and EventCard components
-- 🚀 **Ready for Phase 2** - Task & Event Management with n8n integration
+- ✅ **Phase 0 (Part 1)** - n8n Cloud automation layer configured and tested
+- ✅ **Phase 1 Complete** - 8 pages with Industrial Dusk theme and component architecture
+- 🔄 **Phase 0 (Part 2)** - Database integration in progress
+- 🚀 **Ready for Phase 2** - Task & Event Management
 
-### Latest Achievements (Oct 27, 2025)
-- ✨ Reusable component system implemented
+### Tech Stack
+- **Frontend:** Next.js 16.0.0, React 19.2.0, TailwindCSS 3.3.5
+- **Automation:** n8n Cloud (webhook configured & tested)
+- **Database:** MongoDB Atlas (setup pending)
+- **Theme:** Industrial Dusk (custom dark theme)
+
+### Latest Achievements (Oct 28, 2025)
+- ✅ n8n Cloud webhook configured: `https://iitian-om.app.n8n.cloud/webhook-test/projectx/sync`
+- ✅ Workflow tested successfully (200 OK response)
+- ✅ Function node processing events with structured data
+- ✅ Architecture updated: Frontend → n8n → Database (TBD)
+- ✅ Environment variables documented
+
+### Previous Milestone (Oct 27, 2025)
+- ✨ Reusable component system (Navbar, Footer, EventCard)
 - 🎨 Industrial Dusk dark theme with custom animations
-- � 6 new pages (sitemap, about, terms, privacy, integrations, pricing)
+- 📄 6 new pages (sitemap, about, terms, privacy, integrations, pricing)
 - 🔧 Error handling and date validation
 - 📱 Fully responsive design across all pages
 

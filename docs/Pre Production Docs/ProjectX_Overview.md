@@ -15,10 +15,18 @@ The guiding principle:
 Most productivity tools depend on the user’s discipline. ProjectX reverses that relationship — it manages you like your personal manager.  
 It fetches, merges, and prioritizes data from all your calendars and courses, maintains a unified timetable, and notifies you intelligently before deadlines, classes, or meetings (provide you directe meeting links).
 
-The system runs on two coordinated layers:
+The system runs on three coordinated layers:
 
 - **Next.js Frontend:** A sleek, responsive PWA dashboard.
-- **n8n Automation Engine:** Handles scheduling, notifications, and integrations with external APIs.
+- **n8n Automation Layer:** Cloud-based workflow automation handling webhooks, scheduling, notifications, and API integrations.
+- **Database Layer:** Persistent storage for events, tasks, and user data (MongoDB/MySQL - Phase 0 pending).
+
+**Architecture Flow:**
+```
+Frontend (Next.js) ←→ n8n Cloud (Automation) ←→ Database (TBD)
+        ↓                      ↓
+    User Interface      Webhooks & Workflows
+```
 
 ---
 
@@ -58,18 +66,21 @@ ProjectX evolves into a SaaS platform offering:
 ## 7. Tech Summary
 | Layer | Stack |
 |-------|-------|
-| Frontend | Next.js 15+, React 19.2.0, TailwindCSS 3.3.5, Framer Motion |
-| Backend / Automation | n8n |
-| Database | MongoDB or MySQL |
+| Frontend | Next.js 16.0.0, React 19.2.0, TailwindCSS 3.3.5, Framer Motion |
+| Backend / Automation | n8n Cloud (iitian-om.app.n8n.cloud) |
+| Database | MongoDB or MySQL (Phase 0 - pending) |
 | Notifications | n8n with SendGrid, Twilio, Web Push |
-| Hosting | Vercel (frontend), n8n Cloud or Render (automation) |
+| Hosting | Vercel (frontend), n8n Cloud (automation) |
 | Dev Tools | ESLint, PostCSS, Autoprefixer |
 
-**Current Setup Status (Oct 2025):**
+**Current Setup Status (Oct 28, 2025):**
 - ✅ Next.js 16.0.0 (upgraded from 14.x)
 - ✅ React 19.2.0 with React-DOM 19.2.0
-- ✅ TailwindCSS configured
+- ✅ TailwindCSS configured with Industrial Dusk theme
 - ✅ Project restructured with `frontend/` as main workspace
+- ✅ n8n Cloud account configured
+- ✅ Webhook endpoint tested and working: `https://iitian-om.app.n8n.cloud/webhook-test/projectx/sync`
+- ⏳ Database integration (Phase 0 - next step)
 
 ---
 
