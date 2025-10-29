@@ -7,6 +7,81 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.4.0] - 2025-10-29
+
+### Added - Phase 0 Complete: MongoDB Integration & Clerk Setup ✅
+**Phase 0 (100% Complete):** Backend infrastructure fully operational
+
+#### MongoDB Atlas Integration
+- **Database Setup:** MongoDB Atlas cluster configured
+  - Cluster: `cluster01.2jxbqzt.mongodb.net`
+  - Database: `projectx`
+  - Collection: `events`
+  - Status: ✅ Connected and tested
+
+#### n8n Workflow Finalized
+- **Fixed Function Node:** Correctly extracts data from webhook body
+  ```javascript
+  const data = $input.item.json.body || $input.item.json;
+  return {
+    title: data.title || "Untitled Event",
+    type: data.type || "unknown",
+    source: data.source || "manual",
+    priority: data.priority || "normal",
+    receivedAt: new Date().toISOString()
+  };
+  ```
+
+- **Added Set Node:** Formats fields for MongoDB compatibility
+  - Manual mapping of 5 fields (title, type, source, priority, receivedAt)
+  - Ensures proper key-value structure
+
+- **Configured MongoDB Node:** Insert Documents operation
+  - Fields: `title, type, source, priority, receivedAt`
+  - Successfully stores data with correct structure
+
+#### Complete Workflow Structure
+```
+Webhook → Function Node → Set Node → MongoDB Node → Response
+```
+
+#### End-to-End Testing
+- ✅ PowerShell test command successful (200 OK)
+- ✅ Data correctly stored in MongoDB Atlas
+- ✅ All fields saved as proper key-value pairs
+- ✅ Timestamp auto-generation working
+- ✅ Fallback values functioning
+
+**Test Result (MongoDB Document):**
+```json
+{
+  "_id": { "$oid": "6902062ed27a447cd48a7105" },
+  "title": "FINAL SUCCESS TEST",
+  "type": "meeting",
+  "source": "powershell",
+  "priority": "urgent",
+  "receivedAt": "2025-10-29T12:18:52.670Z"
+}
+```
+
+#### Clerk Authentication Integration
+- **Package Installed:** `@clerk/nextjs@6.34.0`
+- **Purpose:** User authentication, sign-in/sign-up
+- **Integration Point:** Ready for Phase 2 frontend connection
+- **Payment Support:** Stripe/Razorpay integration prepared
+
+#### Architecture Complete
+```
+Frontend (Next.js 16) ←→ n8n Cloud ←→ MongoDB Atlas
+        ↓
+   Clerk Auth (pending integration)
+```
+
+**Phase 0 Status:** ✅ COMPLETE  
+**Next Phase:** Phase 2 - Task & Event Management with authenticated users
+
+---
+
 ## [1.3.0] - 2025-10-28
 
 ### Added - n8n Cloud Integration ✅
