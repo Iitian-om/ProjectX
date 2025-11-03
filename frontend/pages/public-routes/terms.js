@@ -107,7 +107,7 @@ export default function Terms() {
               <h2 className="text-2xl font-bold text-accent mb-4">5. Data and Privacy</h2>
               <div className="text-textSecondary space-y-4">
                 <p>
-                  Your privacy is important to us. Please review our <Link href="/privacy" className="text-accent hover:underline">Privacy Policy</Link> to 
+                  Your privacy is important to us. Please review our <Link href="/public-routes/privacy" className="text-accent hover:underline">Privacy Policy</Link> to 
                   understand how we collect, use, and protect your data.
                 </p>
                 <p>

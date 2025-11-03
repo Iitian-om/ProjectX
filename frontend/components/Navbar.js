@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useUser, UserButton } from '@clerk/nextjs';
 
 export default function Navbar({ showHome = true }) {
   const router = useRouter();
-  // TODO: Replace with actual authentication state
-  const isLoggedIn = false; // This should come from your auth context/state
+  const { isSignedIn, isLoaded } = useUser();
 
   return (
     <nav className="container mx-auto px-6 py-6 flex justify-between items-center border-b border-highlight">
@@ -59,28 +59,30 @@ export default function Navbar({ showHome = true }) {
         >
           Dashboard
         </Link>
-        {isLoggedIn ? (
-          <Link 
-            href="/profile" 
-            className={`transition-colors ${
-              router.pathname === '/profile' 
-                ? 'text-accent font-semibold' 
-                : 'text-textSecondary hover:text-accent'
-            }`}
-          >
-            Profile
-          </Link>
-        ) : (
-          <Link 
-            href="/login" 
-            className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-              router.pathname === '/login'
-                ? 'bg-accent text-background'
-                : 'bg-surface text-textPrimary hover:bg-highlight border border-highlight'
-            }`}
-          >
-            Login
-          </Link>
+        {isLoaded && (
+          isSignedIn ? (
+            <UserButton 
+              appearance={{
+                elements: {
+                  avatarBox: "w-10 h-10",
+                  userButtonPopoverCard: "bg-surface border border-highlight",
+                  userButtonPopoverActionButton: "hover:bg-highlight text-textPrimary",
+                  userButtonPopoverActionButtonText: "text-textPrimary",
+                }
+              }}
+            />
+          ) : (
+            <Link 
+              href="/sign-in" 
+              className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                router.pathname === '/sign-in'
+                  ? 'bg-accent text-background'
+                  : 'bg-surface text-textPrimary hover:bg-highlight border border-highlight'
+              }`}
+            >
+              Login
+            </Link>
+          )
         )}
       </div>
     </nav>
