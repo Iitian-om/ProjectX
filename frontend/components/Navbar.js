@@ -40,6 +40,16 @@ export default function Navbar({ showHome = true }) {
           Timetable
         </Link>
         <Link 
+          href="/tasks" 
+          className={`transition-colors ${
+            router.pathname === '/tasks' 
+              ? 'text-accent font-semibold' 
+              : 'text-textSecondary hover:text-accent'
+          }`}
+        >
+          Tasks
+        </Link>
+        <Link 
           href="/dashboard" 
           className={`transition-colors ${
             router.pathname === '/dashboard' 
