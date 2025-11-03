@@ -1,29 +1,14 @@
-import { useUser, UserButton } from '@clerk/nextjs';
+import { UserButton } from '@clerk/nextjs';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useSafeUser } from '../lib/useClerkSafe';
 
 export default function Dashboard() {
   const router = useRouter();
-  
-  // Safely check if Clerk is available
-  let isLoaded = false;
-  let isSignedIn = false;
-  let user = null;
-  
-  try {
-    const clerkUser = useUser();
-    isLoaded = clerkUser.isLoaded;
-    isSignedIn = clerkUser.isSignedIn;
-    user = clerkUser.user;
-  } catch (error) {
-    // ClerkProvider not available
-    console.warn('Clerk not configured. Dashboard requires authentication to be set up.');
-    isLoaded = true;
-    isSignedIn = false;
-  }
+  const { isLoaded, isSignedIn, user } = useSafeUser();
 
   // Redirect to sign-in if not authenticated
   useEffect(() => {

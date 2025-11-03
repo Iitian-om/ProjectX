@@ -1,12 +1,10 @@
 import { SignIn } from '@clerk/nextjs';
 import Link from 'next/link';
+import { isClerkConfigured } from '../lib/clerkUtils';
 
 export default function SignInPage() {
   // Check if Clerk is properly configured
-  const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
-  const isClerkConfigured = publishableKey && !publishableKey.includes('dummy');
-
-  if (!isClerkConfigured) {
+  if (!isClerkConfigured()) {
     return (
       <div className="min-h-screen bg-background text-textPrimary flex flex-col items-center justify-center py-12 px-6">
         <div className="mb-8 text-center">

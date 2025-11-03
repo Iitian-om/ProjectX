@@ -1,21 +1,11 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useUser, UserButton } from '@clerk/nextjs';
+import { UserButton } from '@clerk/nextjs';
+import { useSafeUser } from '../lib/useClerkSafe';
 
 export default function Navbar({ showHome = true }) {
   const router = useRouter();
-  
-  // Safely check if Clerk is available
-  let isSignedIn = false;
-  let isLoaded = false;
-  try {
-    const { isSignedIn: signedIn, isLoaded: loaded } = useUser();
-    isSignedIn = signedIn;
-    isLoaded = loaded;
-  } catch (error) {
-    // ClerkProvider not available, treat as not signed in
-    isLoaded = true;
-  }
+  const { isSignedIn, isLoaded } = useSafeUser();
 
   return (
     <nav className="container mx-auto px-6 py-6 flex justify-between items-center border-b border-highlight">
