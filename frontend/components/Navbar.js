@@ -4,7 +4,18 @@ import { useUser, UserButton } from '@clerk/nextjs';
 
 export default function Navbar({ showHome = true }) {
   const router = useRouter();
-  const { isSignedIn, isLoaded } = useUser();
+  
+  // Safely check if Clerk is available
+  let isSignedIn = false;
+  let isLoaded = false;
+  try {
+    const { isSignedIn: signedIn, isLoaded: loaded } = useUser();
+    isSignedIn = signedIn;
+    isLoaded = loaded;
+  } catch (error) {
+    // ClerkProvider not available, treat as not signed in
+    isLoaded = true;
+  }
 
   return (
     <nav className="container mx-auto px-6 py-6 flex justify-between items-center border-b border-highlight">

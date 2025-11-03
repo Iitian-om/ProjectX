@@ -6,8 +6,24 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 export default function Dashboard() {
-  const { isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();
+  
+  // Safely check if Clerk is available
+  let isLoaded = false;
+  let isSignedIn = false;
+  let user = null;
+  
+  try {
+    const clerkUser = useUser();
+    isLoaded = clerkUser.isLoaded;
+    isSignedIn = clerkUser.isSignedIn;
+    user = clerkUser.user;
+  } catch (error) {
+    // ClerkProvider not available
+    console.warn('Clerk not configured. Dashboard requires authentication to be set up.');
+    isLoaded = true;
+    isSignedIn = false;
+  }
 
   // Redirect to sign-in if not authenticated
   useEffect(() => {
@@ -28,6 +44,8 @@ export default function Dashboard() {
     );
   }
 
+  const userName = user?.firstName || user?.username || 'User';
+
   return (
     <div className="min-h-screen bg-background text-textPrimary">
       {/* Navigation */}
@@ -38,24 +56,26 @@ export default function Dashboard() {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-4xl md:text-5xl font-bold mb-2">
-              Welcome back, <span className="text-accent">{user.firstName || user.username || 'User'}</span>!
+              Welcome back, <span className="text-accent">{userName}</span>!
             </h1>
             <p className="text-textSecondary text-lg">
               Manage your time, tasks, and events all in one place.
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <UserButton 
-              appearance={{
-                elements: {
-                  avatarBox: "w-12 h-12",
-                  userButtonPopoverCard: "bg-surface border border-highlight",
-                  userButtonPopoverActionButton: "hover:bg-highlight text-textPrimary",
-                  userButtonPopoverActionButtonText: "text-textPrimary",
-                  userButtonPopoverFooter: "hidden",
-                }
-              }}
-            />
+            {isSignedIn && (
+              <UserButton 
+                appearance={{
+                  elements: {
+                    avatarBox: "w-12 h-12",
+                    userButtonPopoverCard: "bg-surface border border-highlight",
+                    userButtonPopoverActionButton: "hover:bg-highlight text-textPrimary",
+                    userButtonPopoverActionButtonText: "text-textPrimary",
+                    userButtonPopoverFooter: "hidden",
+                  }
+                }}
+              />
+            )}
           </div>
         </div>
       </section>
