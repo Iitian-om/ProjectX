@@ -42,18 +42,18 @@ export default function Tasks() {
 
   const handleSaveTask = (savedTask) => {
     if (selectedTask) {
-      // Update existing task
-      setTasks(tasks.map(t => t.id === savedTask.id ? savedTask : t));
+      // Update existing task - creates new array with updated task
+      setTasks(prevTasks => prevTasks.map(t => t.id === savedTask.id ? savedTask : t));
     } else {
-      // Add new task
-      setTasks([savedTask, ...tasks]);
+      // Add new task - prepends to array
+      setTasks(prevTasks => [savedTask, ...prevTasks]);
     }
     setShowTaskForm(false);
     setSelectedTask(null);
   };
 
   const handleDeleteTask = (taskId) => {
-    setTasks(tasks.filter(t => t.id !== taskId));
+    setTasks(prevTasks => prevTasks.filter(t => t.id !== taskId));
     setShowTaskForm(false);
     setSelectedTask(null);
   };

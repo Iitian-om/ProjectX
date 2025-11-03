@@ -105,7 +105,7 @@ export default function TaskCard({ task, onEdit }) {
         <div className="flex items-center gap-2 text-xs text-textSecondary pt-2">
           <span>🕐</span>
           <span>
-            Created: {task.createdAt ? format(parseISO(task.createdAt), 'MMM dd, yyyy') : 'Unknown'}
+            Created: {task.createdAt ? format(parseISO(task.createdAt), 'MMM dd, yyyy') : 'Date not available'}
           </span>
         </div>
       </div>

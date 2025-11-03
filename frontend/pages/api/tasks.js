@@ -1,7 +1,12 @@
 // API endpoint for task management with n8n integration
 // Implements CRUD operations for tasks with MongoDB persistence via n8n
 
-const N8N_WEBHOOK_URL = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL || 'https://iitian-om.app.n8n.cloud/webhook-test/projectx/sync';
+const N8N_WEBHOOK_URL = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL;
+
+// Validate webhook URL is configured
+if (!N8N_WEBHOOK_URL) {
+  console.warn('Warning: NEXT_PUBLIC_N8N_WEBHOOK_URL is not configured. n8n integration will not work.');
+}
 
 // Helper function to call n8n webhook
 async function callN8nWorkflow(action, taskData) {
@@ -75,8 +80,10 @@ export default async function handler(req, res) {
         // Get all tasks or filter by query params
         const { status, priority } = req.query;
         
-        // For MVP, return mock data - in production this would query via n8n
-        // n8n would query MongoDB and return results
+        // TODO: Implement GET via n8n to query MongoDB for consistent data persistence
+        // Current implementation uses mock data for demonstration purposes
+        // This means tasks created via POST will not appear after page reload
+        // Production implementation should call n8n workflow to query MongoDB
         const mockTasks = [
           {
             id: 'task-1',
@@ -149,9 +156,10 @@ export default async function handler(req, res) {
         try {
           await callN8nWorkflow('create', newTask);
         } catch (error) {
-          console.error('n8n workflow error:', error);
-          // Continue even if n8n fails - return the task data
-          // In production, you might want to queue this for retry
+          console.error('n8n workflow error - task not persisted:', error);
+          // TODO: Implement retry queue for production
+          // For now, log the error and continue to provide smooth UX
+          // Note: Task will not persist beyond page reload without n8n
         }
 
         res.status(201).json({ 
@@ -197,7 +205,8 @@ export default async function handler(req, res) {
         try {
           await callN8nWorkflow('update', updatedTask);
         } catch (error) {
-          console.error('n8n workflow error:', error);
+          console.error('n8n workflow error - update not persisted:', error);
+          // TODO: Implement retry queue for production
         }
 
         res.status(200).json({ 
@@ -223,7 +232,8 @@ export default async function handler(req, res) {
         try {
           await callN8nWorkflow('delete', { id });
         } catch (error) {
-          console.error('n8n workflow error:', error);
+          console.error('n8n workflow error - deletion not persisted:', error);
+          // TODO: Implement retry queue for production
         }
 
         res.status(200).json({ 
