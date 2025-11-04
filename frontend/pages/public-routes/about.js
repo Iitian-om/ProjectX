@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 
 export default function About() {
   return (
@@ -114,7 +114,7 @@ export default function About() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
-              href="/signup"
+              href="/sign-up"
               className="bg-accent hover:bg-[#B89658] text-background font-semibold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               Get Started Free

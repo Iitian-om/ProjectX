@@ -57,7 +57,7 @@ export default function Home() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-80 justify-center items-center mb-24">
             <Link
-              href="/signup"
+              href="/sign-up"
               className="group relative bg-accent hover:bg-[#B89658] text-background font-bold px-10 py-4 rounded-xl transition-all shadow-lg hover:shadow-2xl hover:shadow-accent/20 transform hover:scale-105 w-full sm:w-auto overflow-hidden"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
@@ -67,7 +67,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-r from-[#B89658] to-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </Link>
             <Link
-              href="/login"
+              href="/sign-in"
               className="group border-2 border-highlight hover:border-accent text-textPrimary hover:text-accent px-10 py-4 rounded-xl transition-all w-full sm:w-auto font-semibold hover:bg-surface"
             >
               <span className="flex items-center justify-center gap-2">
