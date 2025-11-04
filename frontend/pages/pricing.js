@@ -248,7 +248,7 @@ export default function Pricing() {
                 Contact Sales
               </Link>
               <Link 
-                href="/about"
+                href="/public-routes/about"
                 className="border-2 border-highlight hover:border-accent text-textPrimary hover:text-accent px-8 py-4 rounded-xl transition-all font-semibold hover:bg-surface"
               >
                 Learn More

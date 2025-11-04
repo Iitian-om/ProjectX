@@ -56,11 +56,11 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold text-textPrimary mb-4">Company</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/about" className="text-textSecondary hover:text-accent transition-colors">About</Link></li>
+              <li><Link href="/public-routes/about" className="text-textSecondary hover:text-accent transition-colors">About</Link></li>
               <li><Link href="/careers" className="text-textSecondary hover:text-accent transition-colors">Careers</Link></li>
               <li><Link href="/partners" className="text-textSecondary hover:text-accent transition-colors">Partners</Link></li>
-              <li><Link href="/terms" className="text-textSecondary hover:text-accent transition-colors">Terms</Link></li>
-              <li><Link href="/privacy" className="text-textSecondary hover:text-accent transition-colors">Privacy</Link></li>
+              <li><Link href="/public-routes/terms" className="text-textSecondary hover:text-accent transition-colors">Terms</Link></li>
+              <li><Link href="/public-routes/privacy" className="text-textSecondary hover:text-accent transition-colors">Privacy</Link></li>
               <li><Link href="/security" className="text-textSecondary hover:text-accent transition-colors">Security</Link></li>
             </ul>
           </div>
