@@ -6,6 +6,7 @@ export default function TaskForm({ task = null, onSave, onCancel, onDelete }) {
     title: task?.title || '',
     description: task?.description || '',
     priority: task?.priority || 'normal',
+    status: task?.status || 'todo',
     deadline: task?.deadline ? format(new Date(task.deadline), "yyyy-MM-dd'T'HH:mm") : '',
     meetingLink: task?.meetingLink || '',
   });
@@ -158,7 +159,7 @@ export default function TaskForm({ task = null, onSave, onCancel, onDelete }) {
             </p>
           </div>
 
-          {/* Priority and Deadline Row */}
+          {/* Priority and Status Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Priority */}
             <div>
@@ -179,20 +180,38 @@ export default function TaskForm({ task = null, onSave, onCancel, onDelete }) {
               </select>
             </div>
 
-            {/* Deadline */}
+            {/* Status */}
             <div>
-              <label htmlFor="deadline" className="block text-sm font-semibold text-textPrimary mb-2">
-                Deadline
+              <label htmlFor="status" className="block text-sm font-semibold text-textPrimary mb-2">
+                Status
               </label>
-              <input
-                type="datetime-local"
-                id="deadline"
-                name="deadline"
-                value={formData.deadline}
+              <select
+                id="status"
+                name="status"
+                value={formData.status}
                 onChange={handleChange}
                 className="w-full px-4 py-2 bg-background border-2 border-highlight rounded-lg text-textPrimary focus:outline-none focus:border-accent transition-colors"
-              />
+              >
+                <option value="todo">To Do</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
             </div>
+          </div>
+
+          {/* Deadline */}
+          <div>
+            <label htmlFor="deadline" className="block text-sm font-semibold text-textPrimary mb-2">
+              Deadline
+            </label>
+            <input
+              type="datetime-local"
+              id="deadline"
+              name="deadline"
+              value={formData.deadline}
+              onChange={handleChange}
+              className="w-full px-4 py-2 bg-background border-2 border-highlight rounded-lg text-textPrimary focus:outline-none focus:border-accent transition-colors"
+            />
           </div>
 
           {/* Meeting Link */}

@@ -35,7 +35,7 @@ export default function Footer() {
               <li><Link href="/integrations" className="text-textSecondary hover:text-accent transition-colors">Integrations</Link></li>
               <li><Link href="/changelog" className="text-textSecondary hover:text-accent transition-colors">Changelog</Link></li>
               <li><Link href="/roadmap" className="text-textSecondary hover:text-accent transition-colors">Roadmap</Link></li>
-              <li><Link href="/api" className="text-textSecondary hover:text-accent transition-colors">API</Link></li>
+              <li><Link href="/api-docs" className="text-textSecondary hover:text-accent transition-colors">API</Link></li>
             </ul>
           </div>
 
@@ -107,7 +107,7 @@ export default function Footer() {
           <div className="flex gap-6">
             <Link href="/status" className="hover:text-accent transition-colors">Status</Link>
             <Link href="/sitemap" className="hover:text-accent transition-colors">Sitemap</Link>
-            <a href="#" className="hover:text-accent transition-colors">🌟 Star on GitHub</a>
+            <a href="https://github.com/Iitian-om/projectX" className="hover:text-accent transition-colors">🌟 Star on GitHub</a>
           </div>
         </div>
       </div>

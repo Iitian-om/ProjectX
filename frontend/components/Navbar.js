@@ -63,6 +63,8 @@ export default function Navbar({ showHome = true }) {
         {isLoaded && (
           isSignedIn ? (
             <UserButton 
+              userProfileMode="navigation"
+              userProfileUrl="/user-profile"
               appearance={{
                 elements: {
                   avatarBox: "w-10 h-10",

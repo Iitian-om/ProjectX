@@ -20,7 +20,7 @@ export default function Sitemap() {
         { name: 'Integrations', href: '/integrations' },
         { name: 'Changelog', href: '/changelog' },
         { name: 'Roadmap', href: '/roadmap' },
-        { name: 'API Documentation', href: '/api' },
+        { name: 'API Documentation', href: '/api-docs' },
       ]
     },
     {

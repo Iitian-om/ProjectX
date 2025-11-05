@@ -40,22 +40,29 @@ export default function Tasks() {
     setShowTaskForm(true);
   };
 
-  const handleSaveTask = (savedTask) => {
+  const handleSaveTask = async (savedTask) => {
+    // Optimistically update UI
     if (selectedTask) {
-      // Update existing task - creates new array with updated task
       setTasks(prevTasks => prevTasks.map(t => t.id === savedTask.id ? savedTask : t));
     } else {
-      // Add new task - prepends to array
       setTasks(prevTasks => [savedTask, ...prevTasks]);
     }
+    
     setShowTaskForm(false);
     setSelectedTask(null);
+    
+    // Refresh from server to ensure sync with MongoDB
+    await fetchTasks();
   };
 
-  const handleDeleteTask = (taskId) => {
+  const handleDeleteTask = async (taskId) => {
+    // Optimistically update UI
     setTasks(prevTasks => prevTasks.filter(t => t.id !== taskId));
     setShowTaskForm(false);
     setSelectedTask(null);
+    
+    // Refresh from server to ensure sync with MongoDB
+    await fetchTasks();
   };
 
   const handleCancelForm = () => {

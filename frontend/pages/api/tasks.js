@@ -77,51 +77,41 @@ export default async function handler(req, res) {
   try {
     switch (method) {
       case 'GET': {
-        // Get all tasks or filter by query params
+        // Get all tasks from MongoDB via n8n workflow
         const { status, priority } = req.query;
         
-        // TODO: Implement GET via n8n to query MongoDB for consistent data persistence
-        // Current implementation uses mock data for demonstration purposes
-        // This means tasks created via POST will not appear after page reload
-        // Production implementation should call n8n workflow to query MongoDB
-        const mockTasks = [
-          {
-            id: 'task-1',
-            title: 'Complete Phase 2 Implementation',
-            description: 'Implement task management with CRUD operations',
-            priority: 'high',
-            deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-            status: 'in-progress',
-            meetingLink: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-          {
-            id: 'task-2',
-            title: 'Review n8n Workflow Documentation',
-            description: 'Document the task creation workflow',
-            priority: 'normal',
-            deadline: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-            status: 'todo',
-            meetingLink: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-        ];
+        try {
+          // Call n8n workflow to fetch tasks from MongoDB
+          const result = await callN8nWorkflow('read', { 
+            filters: { status, priority } 
+          });
 
-        let filteredTasks = mockTasks;
-        if (status) {
-          filteredTasks = filteredTasks.filter(task => task.status === status);
-        }
-        if (priority) {
-          filteredTasks = filteredTasks.filter(task => task.priority === priority);
-        }
+          let tasks = result.tasks || [];
+          
+          // Apply client-side filters if n8n didn't handle them
+          if (status && !result.filtered) {
+            tasks = tasks.filter(task => task.status === status);
+          }
+          if (priority && !result.filtered) {
+            tasks = tasks.filter(task => task.priority === priority);
+          }
 
-        res.status(200).json({ 
-          success: true,
-          tasks: filteredTasks,
-          count: filteredTasks.length 
-        });
+          res.status(200).json({ 
+            success: true,
+            tasks: tasks,
+            count: tasks.length 
+          });
+        } catch (error) {
+          console.error('Error fetching tasks from n8n:', error);
+          
+          // Fallback to empty array with helpful message
+          res.status(200).json({ 
+            success: true,
+            tasks: [],
+            count: 0,
+            message: 'Unable to fetch tasks. Please check n8n workflow configuration.'
+          });
+        }
         break;
       }
 
