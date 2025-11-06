@@ -3,6 +3,11 @@
 
 const N8N_WEBHOOK_URL = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL;
 
+// Log WebHook URL on Setup
+console.log("=== N8N CONFIGURATION ===");
+console.log("N8N Webhook URL:", N8N_WEBHOOK_URL);
+console.log("Is configured:", !!N8N_WEBHOOK_URL);
+
 // Validate webhook URL is configured
 if (!N8N_WEBHOOK_URL) {
   console.warn('Warning: NEXT_PUBLIC_N8N_WEBHOOK_URL is not configured. n8n integration will not work.');
@@ -10,6 +15,16 @@ if (!N8N_WEBHOOK_URL) {
 
 // Helper function to call n8n webhook
 async function callN8nWorkflow(action, taskData) {
+  console.log('=== CALLING N8N WORKFLOW ===');
+  console.log('Action:', action);
+  console.log('Webhook URL:', N8N_WEBHOOK_URL);
+  console.log('Task Data:', JSON.stringify(taskData, null, 2));
+
+  if (!N8N_WEBHOOK_URL) {
+    console.error('Cannot call n8n: Webhook URL not configured');
+    return null;
+  }
+
   try {
     const payload = {
       action,
@@ -18,19 +33,46 @@ async function callN8nWorkflow(action, taskData) {
       timestamp: new Date().toISOString()
     };
 
+    console.log('Sending payload to n8n:', JSON.stringify(payload, null, 2));
+
     const response = await fetch(N8N_WEBHOOK_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payload)
     });
 
+    console.log('n8n Response Status:', response.status);
+    console.log('n8n Response OK:', response.ok);
+
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('n8n Error Response:', errorText);
       throw new Error(`n8n workflow failed: ${response.statusText}`);
     }
 
-    return await response.json();
+    const result = await response.json();
+    console.log('n8n Success Response:', JSON.stringify(result, null, 2));
+    
+    // Handle different response formats from n8n
+    if (action === 'read') {
+      // MongoDB FIND returns array directly or wrapped in object
+      if (Array.isArray(result)) {
+        return { tasks: result, count: result.length, success: true };
+      }
+      if (result.tasks && Array.isArray(result.tasks)) {
+        return result;
+      }
+      if (result.documents && Array.isArray(result.documents)) {
+        return { tasks: result.documents, count: result.documents.length, success: true };
+      }
+      // If no tasks found, return empty array
+      return { tasks: [], count: 0, success: true };
+    }
+    
+    return result;
+
   } catch (error) {
     console.error('Error calling n8n workflow:', error);
     throw error;
@@ -46,26 +88,15 @@ function validateTask(task) {
   }
 
   if (task.title && task.title.length > 200) {
-    errors.push('Title must be less than 200 characters');
-  }
-
-  if (task.description && task.description.length > 1000) {
-    errors.push('Description must be less than 1000 characters');
+    errors.push('Title must be 200 characters or less');
   }
 
   if (task.priority && !['low', 'normal', 'high', 'urgent'].includes(task.priority)) {
-    errors.push('Priority must be one of: low, normal, high, urgent');
+    errors.push('Invalid priority value');
   }
 
-  if (task.deadline) {
-    const deadline = new Date(task.deadline);
-    if (isNaN(deadline.getTime())) {
-      errors.push('Invalid deadline date');
-    }
-  }
-
-  if (task.meetingLink && task.meetingLink.length > 500) {
-    errors.push('Meeting link must be less than 500 characters');
+  if (task.status && !['todo', 'in-progress', 'completed'].includes(task.status)) {
+    errors.push('Invalid status value');
   }
 
   return errors;
@@ -77,176 +108,155 @@ export default async function handler(req, res) {
   try {
     switch (method) {
       case 'GET': {
-        // Get all tasks from MongoDB via n8n workflow
-        const { status, priority } = req.query;
+        console.log('=== GET REQUEST ===');
         
         try {
-          // Call n8n workflow to fetch tasks from MongoDB
-          const result = await callN8nWorkflow('read', { 
-            filters: { status, priority } 
-          });
-
-          let tasks = result.tasks || [];
+          // Try to fetch from n8n/MongoDB
+          const result = await callN8nWorkflow('read', { filters: {} });
           
-          // Apply client-side filters if n8n didn't handle them
-          if (status && !result.filtered) {
-            tasks = tasks.filter(task => task.status === status);
+          if (result && result.tasks) {
+            console.log('Returning tasks from n8n:', result.tasks.length);
+            return res.status(200).json({
+              success: true,
+              tasks: result.tasks,
+              count: result.tasks.length
+            });
           }
-          if (priority && !result.filtered) {
-            tasks = tasks.filter(task => task.priority === priority);
-          }
-
-          res.status(200).json({ 
-            success: true,
-            tasks: tasks,
-            count: tasks.length 
-          });
         } catch (error) {
           console.error('Error fetching tasks from n8n:', error);
-          
-          // Fallback to empty array with helpful message
-          res.status(200).json({ 
-            success: true,
-            tasks: [],
-            count: 0,
-            message: 'Unable to fetch tasks. Please check n8n workflow configuration.'
-          });
         }
-        break;
+
+        // Fallback to empty array
+        console.log('Returning empty tasks array (n8n failed)');
+        return res.status(200).json({
+          success: true,
+          tasks: [],
+          count: 0,
+          message: 'Unable to fetch tasks. Please check n8n workflow configuration.'
+        });
       }
 
       case 'POST': {
-        // Create new task
+        console.log('=== POST REQUEST ===');
         const taskData = req.body;
 
-        // Validate input
+        // Validate task data
         const validationErrors = validateTask(taskData);
         if (validationErrors.length > 0) {
-          return res.status(400).json({ 
+          console.error('Validation errors:', validationErrors);
+          return res.status(400).json({
             success: false,
-            error: 'Validation failed',
-            details: validationErrors 
+            errors: validationErrors
           });
         }
 
-        // Create task object with defaults
+        // Generate task ID if not provided
         const newTask = {
-          id: `task-${Date.now()}`,
-          title: taskData.title.trim(),
-          description: taskData.description?.trim() || '',
+          id: taskData.id || `task-${Date.now()}`,
+          title: taskData.title,
+          description: taskData.description || '',
           priority: taskData.priority || 'normal',
+          status: taskData.status || 'todo',
           deadline: taskData.deadline || null,
-          meetingLink: taskData.meetingLink?.trim() || null,
-          status: 'todo',
+          meetingLink: taskData.meetingLink || '',
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         };
 
-        // Call n8n workflow to create task in MongoDB
+        console.log('Created new task:', newTask);
+
+        // Send to n8n for persistence
         try {
+          console.log('Attempting to save to n8n...');
           await callN8nWorkflow('create', newTask);
+          console.log('Successfully saved to n8n!');
         } catch (error) {
           console.error('n8n workflow error - task not persisted:', error);
-          // TODO: Implement retry queue for production
-          // For now, log the error and continue to provide smooth UX
-          // Note: Task will not persist beyond page reload without n8n
+          // Continue anyway to return success to user
         }
 
-        res.status(201).json({ 
+        return res.status(201).json({
           success: true,
-          message: 'Task created successfully',
-          task: newTask 
+          task: newTask
         });
-        break;
       }
 
       case 'PUT': {
-        // Update existing task
-        const taskData = req.body;
+        console.log('=== PUT REQUEST ===');
+        const updateData = req.body;
 
-        if (!taskData.id) {
-          return res.status(400).json({ 
+        if (!updateData.id) {
+          return res.status(400).json({
             success: false,
-            error: 'Task ID is required' 
+            error: 'Task ID is required for updates'
           });
         }
 
-        // Validate input
-        const validationErrors = validateTask(taskData);
+        // Validate update data
+        const validationErrors = validateTask(updateData);
         if (validationErrors.length > 0) {
-          return res.status(400).json({ 
+          return res.status(400).json({
             success: false,
-            error: 'Validation failed',
-            details: validationErrors 
+            errors: validationErrors
           });
         }
 
-        // Update task object
         const updatedTask = {
-          ...taskData,
-          title: taskData.title.trim(),
-          description: taskData.description?.trim() || '',
-          priority: taskData.priority || 'normal',
-          meetingLink: taskData.meetingLink?.trim() || null,
-          updatedAt: new Date().toISOString(),
+          ...updateData,
+          updatedAt: new Date().toISOString()
         };
 
-        // Call n8n workflow to update task in MongoDB
+        // Send to n8n for persistence
         try {
           await callN8nWorkflow('update', updatedTask);
         } catch (error) {
-          console.error('n8n workflow error - update not persisted:', error);
-          // TODO: Implement retry queue for production
+          console.error('n8n workflow error - task not persisted:', error);
         }
 
-        res.status(200).json({ 
+        return res.status(200).json({
           success: true,
-          message: 'Task updated successfully',
-          task: updatedTask 
+          task: updatedTask
         });
-        break;
       }
 
       case 'DELETE': {
-        // Delete task
+        console.log('=== DELETE REQUEST ===');
         const { id } = req.query;
 
         if (!id) {
-          return res.status(400).json({ 
+          return res.status(400).json({
             success: false,
-            error: 'Task ID is required' 
+            error: 'Task ID is required'
           });
         }
 
-        // Call n8n workflow to delete task from MongoDB
+        // Send to n8n for deletion
         try {
           await callN8nWorkflow('delete', { id });
         } catch (error) {
-          console.error('n8n workflow error - deletion not persisted:', error);
-          // TODO: Implement retry queue for production
+          console.error('n8n workflow error - task not deleted:', error);
         }
 
-        res.status(200).json({ 
+        return res.status(200).json({
           success: true,
-          message: 'Task deleted successfully',
-          id 
+          message: 'Task deleted successfully'
         });
-        break;
       }
 
       default:
         res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
-        res.status(405).json({ 
+        return res.status(405).json({
           success: false,
-          error: `Method ${method} not allowed` 
+          error: `Method ${method} Not Allowed`
         });
     }
   } catch (error) {
-    console.error('API error:', error);
-    res.status(500).json({ 
+    // General error handler
+    console.error('API Error:', error);
+     return res.status(500).json({
       success: false,
-      error: 'Internal server error',
-      message: error.message 
+      error: 'Internal server error: ' + error,
+      details: error.message
     });
   }
-}
+};
