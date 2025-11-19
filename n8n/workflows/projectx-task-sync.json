@@ -1,0 +1,393 @@
+{
+  "name": "ProjectX Task Sync",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "projectx/sync",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-node",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "projectx-sync"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract data from webhook\nconst webhookData = $input.item.json.body || $input.item.json;\nconst action = webhookData.action;\n\n// For MongoDB operations\nreturn {\n  json: {\n    collection: 'tasks',\n    operation: action === 'create' ? 'insert' : action === 'read' ? 'find' : action === 'update' ? 'update' : 'delete',\n    action: action,\n    taskData: webhookData\n  }\n};"
+      },
+      "id": "function-node",
+      "name": "Parse Request",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "conditions": {
+                "all": [
+                  {
+                    "field": "={{ $json.action }}",
+                    "operation": "equals",
+                    "value": "create"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "insert"
+            },
+            {
+              "conditions": {
+                "all": [
+                  {
+                    "field": "={{ $json.action }}",
+                    "operation": "equals",
+                    "value": "read"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "find"
+            },
+            {
+              "conditions": {
+                "all": [
+                  {
+                    "field": "={{ $json.action }}",
+                    "operation": "equals",
+                    "value": "update"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "update"
+            },
+            {
+              "conditions": {
+                "all": [
+                  {
+                    "field": "={{ $json.action }}",
+                    "operation": "equals",
+                    "value": "delete"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "delete"
+            }
+          ]
+        },
+        "fallbackOutput": "extra"
+      },
+      "id": "switch-node",
+      "name": "Route Action",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "tasks",
+        "fields": "={{ JSON.stringify($json.taskData) }}"
+      },
+      "id": "mongodb-insert",
+      "name": "MongoDB Insert",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [900, 100],
+      "credentials": {
+        "mongoDb": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "MongoDB Atlas"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "find",
+        "collection": "tasks",
+        "query": "{}"
+      },
+      "id": "mongodb-find",
+      "name": "MongoDB Find",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [900, 250],
+      "credentials": {
+        "mongoDb": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "MongoDB Atlas"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "tasks",
+        "updateKey": "id",
+        "fields": "={{ JSON.stringify($json.taskData) }}"
+      },
+      "id": "mongodb-update",
+      "name": "MongoDB Update",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [900, 400],
+      "credentials": {
+        "mongoDb": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "MongoDB Atlas"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "tasks",
+        "deleteKey": "id"
+      },
+      "id": "mongodb-delete",
+      "name": "MongoDB Delete",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [900, 550],
+      "credentials": {
+        "mongoDb": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "MongoDB Atlas"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "success-field",
+              "name": "success",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "message-field",
+              "name": "message",
+              "value": "Task created successfully",
+              "type": "string"
+            },
+            {
+              "id": "task-field",
+              "name": "task",
+              "value": "={{ $json }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-insert",
+      "name": "Format Insert Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1120, 100]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "tasks-field",
+              "name": "tasks",
+              "value": "={{ $input.all() }}",
+              "type": "array"
+            },
+            {
+              "id": "count-field",
+              "name": "count",
+              "value": "={{ $input.all().length }}",
+              "type": "number"
+            },
+            {
+              "id": "success-field",
+              "name": "success",
+              "value": true,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-find",
+      "name": "Format Find Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1120, 250]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "success-field",
+              "name": "success",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "message-field",
+              "name": "message",
+              "value": "Task updated successfully",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-update",
+      "name": "Format Update Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1120, 400]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "success-field",
+              "name": "success",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "message-field",
+              "name": "message",
+              "value": "Task deleted successfully",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-delete",
+      "name": "Format Delete Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1120, 550]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Parse Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Request": {
+      "main": [
+        [
+          {
+            "node": "Route Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Action": {
+      "main": [
+        [
+          {
+            "node": "MongoDB Insert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "MongoDB Find",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "MongoDB Update",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "MongoDB Delete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB Insert": {
+      "main": [
+        [
+          {
+            "node": "Format Insert Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB Find": {
+      "main": [
+        [
+          {
+            "node": "Format Find Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB Update": {
+      "main": [
+        [
+          {
+            "node": "Format Update Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB Delete": {
+      "main": [
+        [
+          {
+            "node": "Format Delete Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-11-15T06:00:00.000Z",
+  "versionId": "1"
+}

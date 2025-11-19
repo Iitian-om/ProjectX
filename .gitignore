@@ -12,3 +12,11 @@ node_modules/
 # Ignore Next.js build output
 frontend/.next
 frontend/.next/
+
+# Ignore n8n workflow files
+*.workflows/
+
+.n8n/
+
+# Ignore log files
+*.log

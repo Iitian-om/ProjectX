@@ -1,0 +1,326 @@
+{
+  "name": "ProjectX Inbound Sync - FIXED",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "/projectx/sync",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [240, 300],
+      "id": "webhook-node",
+      "name": "Webhook",
+      "webhookId": "projectx-sync"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the webhook payload - data is in body!\nconst webhookData = $input.item.json.body || $input.item.json;\nconst action = webhookData.action;\nconst data = webhookData;\n\n// Log for debugging\nconsole.log('Received action:', action);\nconsole.log('Received data:', JSON.stringify(data, null, 2));\n\n// Validate action exists\nif (!action) {\n  throw new Error('No action provided. Received: ' + JSON.stringify($input.item.json));\n}\n\n// Base configuration\nconst config = {\n  collection: 'tasks',\n  database: 'projectx'\n};\n\nlet result = {};\n\nswitch(action) {\n  case 'create':\n    result = {\n      ...config,\n      operation: 'insert',\n      documents: [{\n        id: data.id,\n        title: data.title,\n        description: data.description || '',\n        priority: data.priority,\n        status: data.status,\n        deadline: data.deadline || null,\n        meetingLink: data.meetingLink || '',\n        createdAt: data.createdAt,\n        updatedAt: data.updatedAt\n      }]\n    };\n    break;\n  \n  case 'read':\n    // For FIND operations - MongoDB will return an array of documents\n    result = {\n      ...config,\n      operation: 'find',\n      query: data.filters || {},\n      options: { \n        limit: 100, \n        sort: { createdAt: -1 }\n      }\n    };\n    break;\n  \n  case 'update':\n    result = {\n      ...config,\n      operation: 'update',\n      query: { id: data.id },\n      update: {\n        $set: {\n          title: data.title,\n          description: data.description,\n          priority: data.priority,\n          status: data.status,\n          deadline: data.deadline,\n          meetingLink: data.meetingLink,\n          updatedAt: new Date().toISOString()\n        }\n      },\n      options: { upsert: false }\n    };\n    break;\n  \n  case 'delete':\n    result = {\n      ...config,\n      operation: 'delete',\n      query: { id: data.id }\n    };\n    break;\n  \n  default:\n    throw new Error(`Unknown action: ${action}. Valid actions: create, read, update, delete`);\n}\n\nconsole.log('Returning result:', JSON.stringify(result, null, 2));\n\nreturn [{ json: result }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300],
+      "id": "code-node",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "insert",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "update",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "delete",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "find",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [680, 300],
+      "id": "switch-node",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "tasks",
+        "fields": "={{ $json.documents[0] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [900, 100],
+      "id": "insert-node",
+      "name": "Insert documents"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "tasks",
+        "fields": "={{ $json.update }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [900, 250],
+      "id": "update-node",
+      "name": "Update documents"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "tasks",
+        "query": "={{ $json.query.id }}"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [900, 400],
+      "id": "delete-node",
+      "name": "Delete documents"
+    },
+    {
+      "parameters": {
+        "collection": "tasks",
+        "options": {
+          "limit": 100,
+          "sort": "{ \"createdAt\": -1 }"
+        },
+        "query": "={}"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [900, 550],
+      "id": "find-node",
+      "name": "Find documents"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "success-field",
+              "name": "success",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "message-field",
+              "name": "message",
+              "value": "Your New Task Created Successfully.",
+              "type": "string"
+            },
+            {
+              "id": "insertedid-field",
+              "name": "insertedID",
+              "value": "={{ $json._id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1120, 100],
+      "id": "set-insert",
+      "name": "Format Insert Response"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "success-field",
+              "name": "success",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "message-field",
+              "name": "message",
+              "value": "Task Updated Successfully",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1120, 250],
+      "id": "set-update",
+      "name": "Format Update Response"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "success-field",
+              "name": "Success",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "message-field",
+              "name": "message",
+              "value": "Task DELETED Successfully",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1120, 400],
+      "id": "set-delete",
+      "name": "Format Delete Response"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "tasks-field",
+              "name": "tasks",
+              "value": "={{ $input.all() }}",
+              "type": "array"
+            },
+            {
+              "id": "count-field",
+              "name": "count",
+              "value": "={{ $input.all().length }}",
+              "type": "number"
+            },
+            {
+              "id": "success-field",
+              "name": "success",
+              "value": true,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1120, 550],
+      "id": "set-find",
+      "name": "Format Find Response"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Code in JavaScript", "type": "main", "index": 0}]]
+    },
+    "Code in JavaScript": {
+      "main": [[{"node": "Switch", "type": "main", "index": 0}]]
+    },
+    "Switch": {
+      "main": [
+        [{"node": "Insert documents", "type": "main", "index": 0}],
+        [{"node": "Update documents", "type": "main", "index": 0}],
+        [{"node": "Delete documents", "type": "main", "index": 0}],
+        [{"node": "Find documents", "type": "main", "index": 0}]
+      ]
+    },
+    "Insert documents": {
+      "main": [[{"node": "Format Insert Response", "type": "main", "index": 0}]]
+    },
+    "Update documents": {
+      "main": [[{"node": "Format Update Response", "type": "main", "index": 0}]]
+    },
+    "Delete documents": {
+      "main": [[{"node": "Format Delete Response", "type": "main", "index": 0}]]
+    },
+    "Find documents": {
+      "main": [[{"node": "Format Find Response", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 1
+}

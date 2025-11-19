@@ -1,6 +1,6 @@
 {
   "name": "projectx-mvp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "ProjectX is a lightweight productivity MVP to manage timetables, tasks, reminders, and calendar integrations using a Next.js frontend and n8n workflows.",
   "license": "ISC",
@@ -11,7 +11,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env TURBOPACK=0 next dev",
     "dev:turbo": "next dev --turbo",
     "build": "next build",
     "start": "next start",
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
+    "cross-env": "^10.1.0",
     "eslint": "^8.54.0",
     "eslint-config-next": "^14.0.0",
     "postcss": "^8.4.31",

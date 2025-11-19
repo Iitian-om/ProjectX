@@ -1,0 +1,548 @@
+{
+  "name": "ProjectX Inbound Sync",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "/projectx/sync",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2000,
+        48
+      ],
+      "id": "fc7f4173-9c47-4edd-9799-26007c1072a0",
+      "name": "Webhook",
+      "webhookId": "bdf34872-beec-4772-9fe4-7ac9ff282c14",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "retryOnFail": false,
+      "waitBetweenTries": 1500,
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "jsCode": "// Older Code\n// const data = $json || {};\n\n// return [\n//   {\n//     json: {\n//       title: data.title || \"Untitled Event\",\n//       type: data.type || \"unknown\",\n//       source: data.source || \"manual\",\n//       priority: data.priority || \"normal\",\n//       receivedAt: new Date().toISOString()\n//     }\n//   }\n// ];\n\n\n// Get the webhook payload - data is in body!\nconst webhookData = $input.item.json.body || $input.item.json;\nconst action = webhookData.action;\nconst data = webhookData;\n\n// Log for debugging\nconsole.log('Received action:', action);\nconsole.log('Received data:', JSON.stringify(data, null, 2));\n\n// Validate action exists\nif (!action) {\n  throw new Error('No action provided. Received: ' + JSON.stringify($input.item.json));\n}\n\n// Base configuration\nconst config = {\n  collection: 'tasks',\n  database: 'projectx'\n};\n\nlet result = {};\n\nswitch(action) {\n  case 'create':\n    result = {\n      ...config,\n      operation: 'insert',\n      documents: [{\n        id: data.id,\n        title: data.title,\n        description: data.description || '',\n        priority: data.priority,\n        status: data.status,\n        deadline: data.deadline || null,\n        meetingLink: data.meetingLink || '',\n        createdAt: data.createdAt,\n        updatedAt: data.updatedAt\n      }]\n    };\n    break;\n  \n  case 'read':\n    // For FIND operations - MongoDB will return an array of documents\n    result = {\n      ...config,\n      operation: 'find',\n      query: data.filters || {},\n      options: { \n        limit: 100, \n        sort: { createdAt: -1 }\n      }\n    };\n    break;\n  \n  case 'update':\n    result = {\n      ...config,\n      operation: 'update',\n      query: { id: data.id },\n      update: {\n        $set: {\n          title: data.title,\n          description: data.description,\n          priority: data.priority,\n          status: data.status,\n          deadline: data.deadline,\n          meetingLink: data.meetingLink,\n          updatedAt: new Date().toISOString()\n        }\n      },\n      options: { upsert: false }\n    };\n    break;\n  \n  case 'delete':\n    result = {\n      ...config,\n      operation: 'delete',\n      query: { id: data.id }\n    };\n    break;\n  \n  default:\n    throw new Error(`Unknown action: ${action}. Valid actions: create, read, update, delete`);\n}\n\nconsole.log('Returning result:', JSON.stringify(result, null, 2));\n\nreturn [{ json: result }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1776,
+        48
+      ],
+      "id": "aab04051-22d2-4589-926f-88c31d9873c7",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "collection": "tasks",
+        "options": {
+          "limit": 100,
+          "sort": "{ \"createdAt\": -1 }"
+        },
+        "query": "={}"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        -1328,
+        336
+      ],
+      "id": "3e142740-851e-41b9-862a-af981d121550",
+      "name": "Find documents",
+      "credentials": {
+        "mongoDb": {
+          "id": "mWD8bCZY5qQSaYyp",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4cc9c4b7-150e-4a7e-90c3-15ecdacee99d",
+              "name": "tasks",
+              "value": "=={{ $input.all() }}",
+              "type": "string"
+            },
+            {
+              "id": "1d44fc8a-945b-449c-ace2-9a3c6f4ba0ec",
+              "name": "count",
+              "value": "=={{ $input.all().length }}",
+              "type": "string"
+            },
+            {
+              "id": "ae624d70-57b9-4389-b589-88cc3ef0a849",
+              "name": "succes",
+              "value": true,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1104,
+        336
+      ],
+      "id": "7d12420b-1461-4d30-ba13-6e0d70cc37e2",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "taks",
+        "fields": "={{ $json.update }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        -1328,
+        -48
+      ],
+      "id": "eb36ae80-9f93-4092-847c-ff8a12819842",
+      "name": "Update documents",
+      "credentials": {
+        "mongoDb": {
+          "id": "mWD8bCZY5qQSaYyp",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1fe869dc-1901-47dc-a013-5170a8ed6fb7",
+              "name": "success",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "86326fe1-496c-4db4-80d0-beb22b065f8c",
+              "name": "message",
+              "value": "Task Updated Succesfully",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1104,
+        -48
+      ],
+      "id": "d15351ec-2755-4564-8053-22399970be0b",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "tasks",
+        "query": "={{ $json.query.id }}"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        -1328,
+        144
+      ],
+      "id": "29178527-b2d5-4d43-a864-e7e4d2a9025f",
+      "name": "Delete documents",
+      "credentials": {
+        "mongoDb": {
+          "id": "mWD8bCZY5qQSaYyp",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b241e2e4-309b-4455-87ce-769db2c432b4",
+              "name": "Success",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "b5d59084-613a-4093-aedd-5b4c24d34f6b",
+              "name": "message",
+              "value": "Task DELETED Successfully",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1104,
+        144
+      ],
+      "id": "12dca1a6-8be0-42c7-932c-6c3e31c58db0",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "insert",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "92eb0d8b-bf08-444d-a1d0-ccd81aef5930"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ea6863de-b144-4ac4-b7f1-1e0adeff127e",
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "update",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "54f78f78-0494-41b8-a0ba-968c7ce11f8a",
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "=delete",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b35bf2df-3188-474c-93e4-582ca03b3ccd",
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "find",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -1552,
+        16
+      ],
+      "id": "555801ee-18cb-4953-9486-06647b981a13",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -736,
+        0
+      ],
+      "id": "0fe2dfa3-499b-4603-92e0-3e341403007f",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "tasks",
+        "fields": "=={{ $json.documents[0] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        -1328,
+        -240
+      ],
+      "id": "f6185026-d67c-4552-b531-39742a6a926e",
+      "name": "Insert documents",
+      "credentials": {
+        "mongoDb": {
+          "id": "mWD8bCZY5qQSaYyp",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c5f071b1-7723-426f-a57b-78f586952469",
+              "name": "success",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "df054102-223b-4f81-9abf-58b76580bad8",
+              "name": "message",
+              "value": "Your New Task Created Successfully.",
+              "type": "string"
+            },
+            {
+              "id": "842c4de7-36a8-4ef6-ba6b-956f212ede33",
+              "name": "insertedID",
+              "value": "=={{ $json._id }}",
+              "type": "string"
+            },
+            {
+              "id": "9de3419e-d4b3-469a-a24e-0bdd20ed005f",
+              "name": "task",
+              "value": "=={{$input.all() || [] }}",
+              "type": "string"
+            },
+            {
+              "id": "21e78c6f-db82-49ff-96c3-edfd6e362b43",
+              "name": "Count",
+              "value": "=={{$input.all() || [].length }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1104,
+        -240
+      ],
+      "id": "65f844a0-fff2-4297-aae7-1440695ed032",
+      "name": "Set Node (Edit Fields)"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find documents": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update documents": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete documents": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Insert documents",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update documents",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete documents",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Find documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        []
+      ]
+    },
+    "Insert documents": {
+      "main": [
+        [
+          {
+            "node": "Set Node (Edit Fields)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Node (Edit Fields)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 1,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
