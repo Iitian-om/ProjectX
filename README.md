@@ -1,6 +1,6 @@
-# 🚀 ProjectX
+﻿# 🚀 ProjectX
 
-> Your AI-powered time management bestie (fr fr no cap)
+> Your AI-powered time management assistant (fr fr no cap)
 
 **Timetables | Tasks | Reminders | Calendar Sync**
 
@@ -8,11 +8,10 @@
 
 ## ⚡ Status
 
-| Phase | Status |
-|-------|--------|
-| 0-1 | ✅ done |
-| 2 | ✅ done |
-| 3 | 🎯 next |
+| Phase | 0 | 1 | 2 | 3 |
+|-------|--------|-------|--------|--------|
+| Status | ✅ done |✅ done |✅ done | 🎯 next |
+
 
 **Tech:** Next.js 16 • React 19 • TailwindCSS • Clerk • n8n • MongoDB
 
@@ -23,29 +22,30 @@
 ## 🔥 Get Started
 
 ```bash
-cd frontend && npm install && npm run dev
+cd frontend && pnpm install && pnpm dev
 # boom ✨ http://localhost:3000
 ```
 
-## � Docs
+## 📚 Documentation
 
-🔗 **[docs/GUIDE.md](docs/GUIDE.md)** - everything you need  
-🔗 **[docs/SETUP.md](docs/SETUP.md)** - detailed setup  
-🔗 **[docs/PHASES_COMPLETE_ROADMAP.md](docs/PHASES_COMPLETE_ROADMAP.md)** - the full vision
+👉 **[Documentation/](Documentation/)** - Complete guides (10 files, 1500+ lines)
 
-### More Details
-
-- 📁 **[Project Structure](DETAILED.md#structure)** - file organization
-- 🏗️ **[Architecture](DETAILED.md#architecture)** - how it works
-- ⚙️ **[Development](DETAILED.md#development)** - scripts & workflow
-- 📦 **[Full Tech Stack](DETAILED.md#tech)** - all dependencies
-- 🎨 **[Design System](DETAILED.md#design)** - colors & theme
-- 🏆 **[Milestones](DETAILED.md#milestones)** - timeline
-- 🤝 **[Contributing](DETAILED.md#contributing)** - guidelines
+### Quick Links
+- [INDEX.md](Documentation/INDEX.md) - Start here 🚀
+- [01_START_HERE.md](Documentation/01_START_HERE.md) - 5-min overview
+- [02_INSTALLATION.md](Documentation/02_INSTALLATION.md) - Setup guide
+- [03_ROADMAP.md](Documentation/03_ROADMAP.md) - 7-phase breakdown
+- [04_AUTHENTICATION.md](Documentation/04_AUTHENTICATION.md) - Clerk setup
+- [05_ARCHITECTURE.md](Documentation/05_ARCHITECTURE.md) - System design
+- [06_CHANGELOG.md](Documentation/06_CHANGELOG.md) - Version history
+- [07_N8N_WORKFLOWS.md](Documentation/07_N8N_WORKFLOWS.md) - Automation
+- [08_API_REFERENCE.md](Documentation/08_API_REFERENCE.md) - API docs
+- [09_MIGRATION_GUIDE.md](Documentation/09_MIGRATION_GUIDE.md) - Upgrades
+- [10_TESTING.md](Documentation/10_TESTING.md) - QA checklist
 
 ## 📝 License
 
-Undecided lol
+Undecided lol & Will Announce soon.
 
 ## 👥 Team
 
@@ -53,8 +53,8 @@ just me rn 👉 [@Iitian-om](https://github.com/Iitian-om)
 
 ## 🔗 Socials
 
-[GitHub](https://github.com/Iitian-om/ProjectX) • [Docs](docs/README.md) • [Changelog](docs/Development%20Docs/CHANGELOG.md)
+[GitHub](https://github.com/Iitian-om/ProjectX) • [Documentation](Documentation/) • [Changelog](Documentation/06_CHANGELOG.md)
 
 ---
 
-**v2.0.0** | Jan 18, 2026 | Phase 2 ✅ done | Phase 3 coming 🚀
+**v1.2.5** | Jan 18, 2026 | Phase 2 ✅ done | Phase 3 coming 🚀
