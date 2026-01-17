@@ -2,174 +2,225 @@
 
 **Welcome to ProjectX Documentation!** 📚
 
-This is your central hub for all project documentation. We've organized everything into two main categories to help you find what you need quickly.
+Central hub for all ProjectX documentation. Everything is organized for quick access by role and need.
 
 ---
 
-## � Documentation Structure
+## 🎯 Start Here
 
-ProjectX documentation is organized into two main folders:
+**New to ProjectX?** Read in this order:
+1. [GUIDE.md](GUIDE.md) ← Navigation guide (2 min)
+2. [../README.md](../README.md) ← Project overview (5 min)
+3. [../SETUP.md](../SETUP.md) ← Get it running (10 min)
+4. [PHASES_COMPLETE_ROADMAP.md](PHASES_COMPLETE_ROADMAP.md) ← Full roadmap (15 min)
 
-### 1. **Development Docs/** 📝
-**Real-time development records, technical changes, and version history**
-
-This folder contains living documents that track actual development progress:
-
-| Document | Purpose | When to Read |
-|----------|---------|--------------|
-| **CHANGELOG.md** | Complete version history of all changes | When you want to see what was built in each version |
-| **UPDATE_SUMMARY.md** | Documentation change tracker with commit details | When you need to understand recent updates |
-| **MIGRATION_NOTES.md** | Next.js 14→16 & React 18→19 upgrade guide | When working with new framework features |
-| **DOCUMENTATION_UPDATE_REPORT.md** | Detailed report of doc changes | For comprehensive update overview |
-
-**Use Development Docs when:**
-- 🔍 You want to see what actually happened during development
-- 📅 You need to track changes by date or commit
-- 🛠️ You're troubleshooting or understanding technical decisions
-- 📊 You want to see project progress and statistics
+**Want specific answers?** Jump to:
+- 🔧 **Setting up?** → [../SETUP.md](../SETUP.md)
+- 🔐 **Authentication?** → [../AUTHENTICATION_SETUP.md](../AUTHENTICATION_SETUP.md)
+- 🗺️ **Project roadmap?** → [PHASES_COMPLETE_ROADMAP.md](PHASES_COMPLETE_ROADMAP.md)
+- 🛠️ **Technical docs?** → [Development Docs/](Development%20Docs/) folder
+- 📝 **What changed?** → [Development Docs/CHANGELOG.md](Development%20Docs/CHANGELOG.md)
+- 🎯 **Navigation help?** → [GUIDE.md](GUIDE.md) ← **Comprehensive navigation & learning paths**
 
 ---
 
-### 2. **Pre Production Docs/** 🗺️
-**Forward-looking plans, roadmaps, and phase specifications**
-
-This folder contains planning documents and phase requirements:
-
-| Document | Purpose | Phase Status |
-|----------|---------|--------------|
-| **ProjectX_Overview.md** | Product vision & architecture | Reference |
-| **Phase1_Timetable.md** | Landing page & timetable specs | ✅ Completed |
-| **Phase2_TaskEventManagement.md** | Task CRUD & n8n integration | 🎯 Next Up |
-| **Phase3_RemindersNotifications.md** | Email/SMS notifications | ⏳ Planned |
-| **Phase4_ToDoPanel.md** | Priority sorting & task tracking | ⏳ Planned |
-| **Phase5_CalendarIntegration.md** | Google Calendar & Outlook sync | ⏳ Planned |
-| **Phase6_Analytics_PWA.md** | Dashboard analytics & PWA | ⏳ Planned |
-| **Phase7_Testing.md** | QA, testing & polish | ⏳ Planned |
-
-**Use Pre Production Docs when:**
-- 🎯 You want to understand what's planned for future phases
-- 📋 You need feature specifications or requirements
-- 🗺️ You're planning development work
-- 📐 You want to see the product roadmap
-
----
-
-## � Quick Start Guide
+## 👥 Quick Navigation by Role
 
 ### For New Team Members
+**Learning path:** GUIDE.md → ../README.md → ../SETUP.md → PHASES_COMPLETE_ROADMAP.md
 
-**Start here in this order:**
+### For Frontend Developers
+**Quick reference:** GUIDE.md → PHASES_COMPLETE_ROADMAP.md (Phase 2) → Development Docs/PHASE2_VISUAL_OVERVIEW.md
 
-1. **Read:** `../README.md` (project root) - Get project overview
-2. **Read:** `Pre Production Docs/ProjectX_Overview.md` - Understand the vision
-3. **Read:** `Development Docs/CHANGELOG.md` - See what's been built
-4. **Read:** `Pre Production Docs/Phase1_Timetable.md` - See completed Phase 1
-5. **Read:** `Pre Production Docs/Phase2_TaskEventManagement.md` - Understand next phase
+### For Backend Developers
+**Quick reference:** GUIDE.md → ../SETUP.md → Development Docs/N8N Docs/
 
-### For Developers
-
-**Working on the codebase?**
-
-1. **Check:** `Development Docs/UPDATE_SUMMARY.md` - Recent changes
-2. **Reference:** `Development Docs/MIGRATION_NOTES.md` - React 19 features
-3. **Review:** `Pre Production Docs/Phase[X]_*.md` - Current phase requirements
-4. **Check:** `../SETUP.md` (project root) - Development commands
+### For QA / Testers
+**Quick reference:** Development Docs/PHASE2_TESTING_CHECKLIST.md
 
 ### For Project Managers
-
-**Tracking progress?**
-
-1. **Review:** `Development Docs/CHANGELOG.md` - Complete history
-2. **Check:** Phase documents for completion status
-3. **Monitor:** `Development Docs/UPDATE_SUMMARY.md` - Recent updates
-4. **Reference:** `Pre Production Docs/ProjectX_Overview.md` - Overall goals
+**Quick reference:** PHASES_COMPLETE_ROADMAP.md → Development Docs/CHANGELOG.md
 
 ---
+
+## 📂 Documentation Structure
+
+### Root Level (`/docs`)
+
+**Essential files**
+
+| File | Purpose |
+|------|---------|
+| **GUIDE.md** 📖 | ⭐ Navigation guide with decision trees & learning paths |
+| **README.md** | This file - documentation overview |
+| **SETUP.md** | Installation & environment setup |
+| **AUTHENTICATION_SETUP.md** | Clerk OAuth configuration |
+| **PHASES_COMPLETE_ROADMAP.md** | Complete 7-phase roadmap with status |
+
+### Development Docs/ (`/docs/Development Docs`)
+
+**Technical records of development work**
+
+| File | Purpose |
+|------|---------|
+| **CHANGELOG.md** | Version history & release notes |
+| **PHASE2_BUGFIXES.md** | Bug fixes & root cause analysis |
+| **PHASE2_TESTING_CHECKLIST.md** | 100+ QA test cases |
+| **PHASE2_VISUAL_OVERVIEW.md** | Architecture diagrams & flow charts |
+| **MIGRATION_NOTES.md** | Framework upgrade details |
+| **N8N Docs/** | Workflow documentation |
+
+### Pre Production Docs/ (`/docs/Pre Production Docs`)
+
+**Forward-looking plans & specifications** (kept as-is for reference)
+
+```
+├── ProjectX_Overview.md           → Product vision
+├── Phase1_Timetable.md            → Phase specs
+├── Phase2_TaskEventManagement.md
+├── Phase3_RemindersNotifications.md
+├── Phase4_ToDoPanel.md
+├── Phase5_CalendarIntegration.md
+├── Phase6_Analytics_PWA.md
+└── Phase7_Testing.md
+```
+
+---
+
+## 🔍 Finding What You Need
+
+### "What's been built?"
+→ [Development Docs/CHANGELOG.md](Development%20Docs/CHANGELOG.md)
+
+### "What should I test?"
+→ [Development Docs/PHASE2_TESTING_CHECKLIST.md](Development%20Docs/PHASE2_TESTING_CHECKLIST.md)
+
+### "How do workflows work?"
+→ [Development Docs/N8N Docs/](Development%20Docs/N8N%20Docs/)
+
+### "What's the project vision?"
+→ [Pre Production Docs/ProjectX_Overview.md](Pre%20Production%20Docs/ProjectX_Overview.md)
+
+### "What's the next feature?"
+→ [PHASES_COMPLETE_ROADMAP.md](PHASES_COMPLETE_ROADMAP.md)
+
+### "How is this architected?"
+→ [Development Docs/PHASE2_VISUAL_OVERVIEW.md](Development%20Docs/PHASE2_VISUAL_OVERVIEW.md)
 
 ---
 
 ## 📊 Current Project Status
 
-**Last Updated:** October 27, 2025
+**As of January 18, 2026**
 
-### ✅ Completed Phases
+### Phase Completion
+- ✅ **Phase 0:** Setup complete
+- ✅ **Phase 1:** Landing page & timetable delivered
+- ✅ **Phase 2:** Task management & n8n integration complete
+- 🔄 **Phase 3-7:** Planned
 
-#### Phase 0: Setup & Initial Planning
-- Next.js 16.0.0 installed
-- React 19.2.0 upgraded
-- Project structure established
-- TailwindCSS configured
-
-#### Phase 1: Landing Page & Timetable ✅
-**Status:** Completed (Oct 27, 2025)
-- ✅ 8 pages delivered (index, timetable, sitemap, about, terms, privacy, integrations, pricing)
-- ✅ 3 reusable components (Navbar, Footer, EventCard)
-- ✅ Industrial Dusk dark theme implemented
-- ✅ Error handling and validation
-- ✅ Fully responsive design
-
-**📄 Documentation:** `Pre Production Docs/Phase1_Timetable.md`
+### Recent Work (January 18, 2026)
+- ✅ Real user data isolation implemented
+- ✅ Public demo pages created
+- ✅ Authentication routing configured
+- ✅ Documentation restructured
 
 ---
 
-### 🎯 Next Phase
-
-#### Phase 2: Task & Event Management
-**Status:** Ready to Start
-- Backend API integration
-- n8n workflow setup
-- CRUD operations for events
-- Real-time data synchronization
-- Authentication implementation
-
-**📄 Documentation:** `Pre Production Docs/Phase2_TaskEventManagement.md`
-
----
-
-### ⏳ Future Phases
-
-- **Phase 3:** Reminders & Notifications (Email, SMS, Push)
-- **Phase 4:** To-Do Panel & Prioritization
-- **Phase 5:** Calendar Integration (Google, Outlook)
-- **Phase 6:** Analytics & PWA
-- **Phase 7:** Testing & Polish
-
----
-
-## 🛠 Technical Stack
+## 🛠 Tech Stack
 
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| Next.js | 16.0.0 | Frontend framework (Turbopack disabled) |
+| Next.js | 16.0.0 | Frontend framework |
 | React | 19.2.0 | UI library |
-| TailwindCSS | 3.3.5 | Styling (Industrial Dusk theme) |
-| date-fns | 2.30.0 | Date utilities |
-| Axios | 1.6.0 | HTTP client |
+| TailwindCSS | 3.3.5 | Styling (Industrial Dusk) |
+| Clerk | 6.34.0 | Authentication (OAuth2) |
+| n8n | Cloud | Automation workflows |
+| MongoDB | Atlas | Database |
 
-**Design System:**
-- **Theme:** Industrial Dusk (dark theme)
-- **Primary Color:** #C7A76C (brass-gold)
-- **Background:** #1C1F24 (dark)
-- **Typography:** System fonts with gradient effects
-- **Animations:** CSS keyframes
+**Design System:** Industrial Dusk dark theme with brass-gold accents
 
 ---
 
-## 📁 File Directory Reference
+## 🗺️ Navigation Map
+
+```
+START HERE
+    ↓
+  GUIDE.md (this folder)
+    ↓
+  ┌──────────────────────────────────┐
+  ↓                                  ↓
+New Team Member              Experienced Dev
+  ↓                                  ↓
+../README.md                  PHASES_COMPLETE_ROADMAP.md
+../SETUP.md                   Development Docs/
+PHASES_COMPLETE_ROADMAP.md    [Jump to your role]
+```
+
+---
+
+## ✨ Key Updates (January 18, 2026)
+
+### Documentation Restructuring ✅
+- Merged DOCUMENTATION_ORGANIZATION.md + NAVIGATION_GUIDE.md → **GUIDE.md**
+- Cleaned up /docs folder for professionalism
+- Updated all cross-references
+- Created comprehensive navigation guide
+
+### Phase 2 Enhancements ✅
+- Real user data isolation
+- Public demo pages (dashboard, tasks, timetable)
+- Proper authentication routing
+- 100+ code comments added
+
+### Environment Setup ✅
+- Configured `.env.local` with n8n webhook
+- Fixed public route configuration
+- Dynamic navbar routing
+
+---
+
+## 📞 Quick Lookup
+
+| Need | Go Here |
+|------|---------|
+| Project overview | [../README.md](../README.md) |
+| Installation | [../SETUP.md](../SETUP.md) |
+| Configure authentication | [../AUTHENTICATION_SETUP.md](../AUTHENTICATION_SETUP.md) |
+| Understand roadmap | [PHASES_COMPLETE_ROADMAP.md](PHASES_COMPLETE_ROADMAP.md) |
+| See version history | [Development Docs/CHANGELOG.md](Development%20Docs/CHANGELOG.md) |
+| Test the app | [Development Docs/PHASE2_TESTING_CHECKLIST.md](Development%20Docs/PHASE2_TESTING_CHECKLIST.md) |
+| Understand architecture | [Development Docs/PHASE2_VISUAL_OVERVIEW.md](Development%20Docs/PHASE2_VISUAL_OVERVIEW.md) |
+| Get lost? | [GUIDE.md](GUIDE.md) |
+
+---
+
+## 📁 File Organization
 
 ```
 docs/
-├── README.md                           ← You are here!
-├── Development Docs/                   ← What was built
-│   ├── CHANGELOG.md                    ← Version history (all 13 commits)
-│   ├── UPDATE_SUMMARY.md               ← Documentation change tracker
-│   ├── MIGRATION_NOTES.md              ← Next.js/React upgrade guide
-│   └── DOCUMENTATION_UPDATE_REPORT.md  ← Detailed update report
+├── README.md                              ← Overview (you are here)
+├── GUIDE.md                               ← Navigation & learning paths
+├── SETUP.md                               ← Installation (in root)
+├── AUTHENTICATION_SETUP.md                ← Auth setup (in root)
+├── PHASES_COMPLETE_ROADMAP.md             ← Full 7-phase roadmap
 │
-└── Pre Production Docs/                ← What's planned
-    ├── ProjectX_Overview.md            ← Product vision
-    ├── Phase1_Timetable.md             ← ✅ Completed
-    ├── Phase2_TaskEventManagement.md   ← 🎯 Next
+├── Development Docs/                      ← Technical documentation
+│   ├── CHANGELOG.md                       ← Version history
+│   ├── PHASE2_BUGFIXES.md                 ← Bug analysis
+│   ├── PHASE2_TESTING_CHECKLIST.md        ← QA test cases
+│   ├── PHASE2_VISUAL_OVERVIEW.md          ← Architecture
+│   ├── MIGRATION_NOTES.md                 ← Upgrade guides
+│   └── N8N Docs/                          ← Workflow docs
+│       ├── N8N_INTEGRATION_DOCS_REPORT.md
+│       ├── N8N_QUICK_REFERENCE.md
+│       └── N8N_WORKFLOW_SETUP_GUIDE.md
+│
+└── Pre Production Docs/                   ← Phase plans & specs
+    ├── ProjectX_Overview.md
+    ├── Phase1_Timetable.md
+    ├── Phase2_TaskEventManagement.md
     ├── Phase3_RemindersNotifications.md
     ├── Phase4_ToDoPanel.md
     ├── Phase5_CalendarIntegration.md
@@ -179,138 +230,27 @@ docs/
 
 ---
 
-## 🔍 Finding What You Need
+## 📝 Documentation Updates
 
-### "I want to see what's been built"
-→ Go to `Development Docs/CHANGELOG.md`
+**Last Updated:** January 18, 2026  
+**Status:** Phase 2 Complete ✅  
+**Next Phase:** Phase 3 (Reminders & Notifications) ⏳
 
-### "I want to understand the upgrade details"
-→ Go to `Development Docs/MIGRATION_NOTES.md`
-
-### "I want to see the product vision"
-→ Go to `Pre Production Docs/ProjectX_Overview.md`
-
-### "I want to know what's next"
-→ Go to `Pre Production Docs/Phase2_TaskEventManagement.md`
-
-### "I want recent changes summary"
-→ Go to `Development Docs/UPDATE_SUMMARY.md`
-
-### "I want to see Phase 1 completion"
-→ Go to `Pre Production Docs/Phase1_Timetable.md`
+**Files Consolidated (Merged into GUIDE.md):**
+- ~~DOCUMENTATION_ORGANIZATION.md~~ 
+- ~~NAVIGATION_GUIDE.md~~ 
 
 ---
 
-## 📝 Documentation Conventions
+## 🚀 Ready to Build
 
-### Status Indicators
-- ✅ **Completed** - Phase finished and delivered
-- 🎯 **Next Up** - Currently being worked on
-- 🔄 **In Progress** - Active development
-- ⏳ **Planned** - Not yet started
+**All documentation is organized and current.**  
+**Start with [GUIDE.md](GUIDE.md) if you're unsure where to go.**
 
-### File Naming
-- **Phase documents:** `PhaseX_FeatureName.md`
-- **Development docs:** `UPPERCASE_WITH_UNDERSCORES.md`
-- **General docs:** `TitleCase.md`
-
-### Version Numbers
-We follow [Semantic Versioning](https://semver.org/):
-- **Major.Minor.Patch** (e.g., 1.2.0)
-- **Major:** Breaking changes or new phases
-- **Minor:** New features within a phase
-- **Patch:** Bug fixes and small updates
+For the latest updates, see [Development Docs/CHANGELOG.md](Development%20Docs/CHANGELOG.md)
 
 ---
 
-## 🤝 Contributing to Documentation
-
-When updating docs:
-
-1. **Development changes** → Update `Development Docs/`
-   - Add to CHANGELOG.md
-   - Update UPDATE_SUMMARY.md
-
-2. **Planning changes** → Update `Pre Production Docs/`
-   - Modify phase documents
-   - Update requirements or features
-
-3. **Always:**
-   - Keep README.md (this file) updated with status
-   - Update version numbers and dates
-   - Use status indicators (✅ 🎯 ⏳)
-   - Cross-reference related documents
-
----
-
-## 🔗 External Resources
-
-### Project Files
-- **[Root README](../README.md)** - Project overview
-- **[SETUP.md](../SETUP.md)** - Development setup guide
-- **[Roadmap](../ProjectX%20–%20MVP%20Roadmap%20&%20Documentation%20Blueprint.md)** - Complete MVP roadmap
-
-### Code Repositories
-- **[Frontend Code](../frontend/)** - Next.js application
-- **[n8n Workflows](../n8n/)** - Automation workflows (planned)
-
----
-
-## 📞 Need Help?
-
-### For Questions About:
-- **Setup & Installation** → Check `../SETUP.md`
-- **Recent Changes** → Check `Development Docs/UPDATE_SUMMARY.md`
-- **Framework Features** → Check `Development Docs/MIGRATION_NOTES.md`
-- **Future Features** → Check `Pre Production Docs/Phase[X]_*.md`
-- **Product Vision** → Check `Pre Production Docs/ProjectX_Overview.md`
-
-### Still Stuck?
-1. Search the docs folder for keywords
-2. Check the CHANGELOG for related commits
-3. Review the phase documents for context
-4. Create an issue on GitHub
-
----
-
-## 📈 Version History
-
-| Date | Version | Milestone |
-|------|---------|-----------|
-| Oct 27, 2025 | 1.2.0 | Phase 1 complete: 8 pages, component architecture |
-| Oct 26, 2025 | 1.1.0 | Industrial Dusk theme, landing page redesign |
-| Oct 25, 2025 | 1.0.0 | Next.js 16 setup complete, Phase 0 done |
-| Oct 23-24, 2025 | 0.0.x | Initial project setup and structure |
-
----
-
-## 🎉 Recent Achievements
-
-### Component Architecture ✅
-- Reusable Navbar with conditional navigation
-- Professional SaaS Footer with timeline
-- EventCard component with icons and badges
-
-### Design System ✅
-- Industrial Dusk dark theme
-- Custom color palette with brass-gold accents
-- CSS animations for gradients
-- Consistent typography
-
-### Pages Delivered ✅
-- Landing Page, Timetable, Sitemap
-- About, Terms, Privacy
-- Integrations, Pricing
-
-### Code Quality ✅
-- Error handling with date validation
-- Safe parsing with fallbacks
-- Responsive design across all pages
-- Accessibility improvements
-
----
-
-**🚀 Ready to build the future of productivity management!**
-
-*Documentation Hub maintained by the ProjectX team*  
-*For the latest updates, check: `Development Docs/CHANGELOG.md`*
+*ProjectX Documentation Hub*  
+*Maintained by the ProjectX team*  
+*Last Updated: January 18, 2026*
