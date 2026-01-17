@@ -1,120 +1,37 @@
-import { UserButton } from '@clerk/nextjs';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { useSafeUser } from '../lib/useClerkSafe';
 
 /**
- * Dashboard Component - User-Specific Dashboard
+ * Dashboard Sample Page - PUBLIC DEMO PAGE
  * 
- * This is a PROTECTED route that shows authenticated users their personal statistics:
- * - Active and completed tasks (user-specific data from MongoDB)
- * - Today's events and upcoming events (Phase 5 - Calendar integration)
- * - Reminders (Phase 3 - Notification system)
- * - Integration status
+ * This is a PUBLIC route (no authentication required) showing sample data.
+ * Purpose: Allow website visitors to preview dashboard features before signing up
  * 
- * Non-authenticated users are redirected to sign-in.
- * For a public demo dashboard, see /dashboard-sample page.
+ * Features displayed:
+ * - Sample user profile (John Doe)
+ * - Sample task statistics
+ * - Sample event statistics
+ * - Mock quick actions
+ * - Mock upcoming events
+ * - Mock activity log
+ * 
+ * Real authenticated users see: /dashboard (user-specific data)
+ * Public visitors see: /dashboard-sample (this page with sample data)
  */
-export default function Dashboard() {
-  const router = useRouter();
-  const { isLoaded, isSignedIn, user } = useSafeUser();
-  
-  // State: Dashboard statistics - only for current authenticated user
-  const [stats, setStats] = useState({
-    tasksTotal: 0,
-    tasksCompleted: 0,
-    tasksActive: 0,
-    eventsToday: 0,
-    eventsUpcoming: 0,
-    reminders: 0,
+export default function DashboardSample() {
+  // Sample statistics - same structure as real dashboard but hardcoded for demo
+  const sampleStats = {
+    tasksTotal: 24,
+    tasksCompleted: 8,
+    tasksActive: 16,
+    eventsToday: 3,
+    eventsUpcoming: 5,
+    reminders: 2,
     integrations: 2,
-  });
-  const [loading, setLoading] = useState(true);
-
-  /**
-   * Effect: Redirect to sign-in if user is not authenticated
-   * This ensures only logged-in users can access this page
-   */
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push('/sign-in');
-    }
-  }, [isLoaded, isSignedIn, router]);
-
-  /**
-   * Effect: Fetch personalized dashboard stats when user is authenticated
-   * Runs only after Clerk finishes loading and user is confirmed signed in
-   */
-  useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      fetchDashboardStats();
-    }
-  }, [isLoaded, isSignedIn]);
-
-  /**
-   * Fetch dashboard statistics for the current user from MongoDB
-   * 
-   * This function:
-   * 1. Calls the /api/tasks endpoint with user context
-   * 2. Filters tasks to show only current user's data
-   * 3. Calculates statistics (active, completed, total)
-   * 4. Updates state with real data
-   * 
-   * Error handling: If fetch fails, displays "-" on dashboard
-   */
-  const fetchDashboardStats = async () => {
-    try {
-      setLoading(true);
-      
-      // Fetch user's tasks from n8n → MongoDB
-      // Note: Currently fetches all tasks; Phase 2.5 should add userId filtering in API
-      const tasksRes = await fetch('/api/tasks');
-      const tasksData = await tasksRes.json();
-      const tasks = tasksData.tasks || [];
-      
-      // Filter tasks by status (this filters by current user via Clerk context)
-      const tasksCompleted = tasks.filter(t => t.status === 'Completed').length;
-      const tasksActive = tasks.filter(t => t.status !== 'Completed').length;
-      const tasksTotal = tasks.length;
-
-      // Calculate events for today (placeholder - Phase 5 will integrate calendar)
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      
-      // Update dashboard stats with real data
-      setStats(prev => ({
-        ...prev,
-        tasksTotal,
-        tasksCompleted,
-        tasksActive,
-        eventsToday: 0, // Phase 5: Google Calendar & Outlook integration
-        eventsUpcoming: 0, // Phase 5: Google Calendar & Outlook integration
-        reminders: 0, // Phase 3: Email/SMS reminder system
-      }));
-    } catch (error) {
-      console.error('Error fetching dashboard stats:', error);
-      // Keep default values if fetch fails - user still sees dashboard structure
-    } finally {
-      setLoading(false);
-    }
   };
 
-  // Show loading state while checking authentication
-  if (!isLoaded || !isSignedIn) {
-    return (
-      <div className="min-h-screen bg-background text-textPrimary flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-4"></div>
-          <p className="text-textSecondary">Loading your dashboard...</p>
-        </div>
-      </div>
-    );
-  }
-
-  const userName = user?.firstName || user?.username || 'User';
+  const userName = "John Doe"; // Sample user name
 
   return (
     <div className="min-h-screen bg-background text-textPrimary">
@@ -133,60 +50,55 @@ export default function Dashboard() {
             </p>
           </div>
           <div className="flex items-center gap-4">
-            {isSignedIn && (
-              <UserButton 
-                appearance={{
-                  elements: {
-                    avatarBox: "w-12 h-12",
-                    userButtonPopoverCard: "bg-surface border border-highlight",
-                    userButtonPopoverActionButton: "hover:bg-highlight text-textPrimary",
-                    userButtonPopoverActionButtonText: "text-textPrimary",
-                    userButtonPopoverFooter: "hidden",
-                  }
-                }}
-              />
-            )}
+            {/* Sample user avatar placeholder */}
+            <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center text-background font-bold">
+              JD
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Quick Stats */}
+      {/* Quick Stats Section - SAMPLE DATA */}
       <section className="container mx-auto px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Card 1: Today's Events (Sample) */}
           <div className="bg-surface p-6 rounded-xl border border-highlight hover:border-accent transition-all">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-textSecondary text-sm font-semibold">Today's Events</h3>
               <span className="text-2xl">📅</span>
             </div>
-            <p className="text-3xl font-bold text-accent">{loading ? '-' : stats.eventsToday}</p>
-            <p className="text-xs text-textSecondary mt-1">{stats.eventsUpcoming} upcoming</p>
+            <p className="text-3xl font-bold text-accent">{sampleStats.eventsToday}</p>
+            <p className="text-xs text-textSecondary mt-1">{sampleStats.eventsUpcoming} upcoming</p>
           </div>
 
+          {/* Card 2: Active Tasks (Sample) */}
           <div className="bg-surface p-6 rounded-xl border border-highlight hover:border-accent transition-all">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-textSecondary text-sm font-semibold">Active Tasks</h3>
               <span className="text-2xl">✅</span>
             </div>
-            <p className="text-3xl font-bold text-accent">{loading ? '-' : stats.tasksActive}</p>
-            <p className="text-xs text-textSecondary mt-1">{stats.tasksCompleted} completed this week</p>
+            <p className="text-3xl font-bold text-accent">{sampleStats.tasksActive}</p>
+            <p className="text-xs text-textSecondary mt-1">{sampleStats.tasksCompleted} completed this week</p>
           </div>
 
+          {/* Card 3: Reminders (Sample) */}
           <div className="bg-surface p-6 rounded-xl border border-highlight hover:border-accent transition-all">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-textSecondary text-sm font-semibold">Reminders</h3>
               <span className="text-2xl">🔔</span>
             </div>
-            <p className="text-3xl font-bold text-accent">{loading ? '-' : stats.reminders}</p>
+            <p className="text-3xl font-bold text-accent">{sampleStats.reminders}</p>
             <p className="text-xs text-textSecondary mt-1">0 needs attention</p>
           </div>
 
+          {/* Card 4: Integrations (Sample) */}
           <div className="bg-surface p-6 rounded-xl border border-highlight hover:border-accent transition-all">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-textSecondary text-sm font-semibold">Integrations</h3>
               <span className="text-2xl">🔗</span>
             </div>
-            <p className="text-3xl font-bold text-accent">{loading ? '-' : stats.integrations}</p>
-            <p className="text-xs text-textSecondary mt-1">{stats.integrations > 0 ? 'All synced' : 'None synced'}</p>
+            <p className="text-3xl font-bold text-accent">{sampleStats.integrations}</p>
+            <p className="text-xs text-textSecondary mt-1">{sampleStats.integrations > 0 ? 'All synced' : 'None synced'}</p>
           </div>
         </div>
 
@@ -194,8 +106,9 @@ export default function Dashboard() {
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-4">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Action 1: View Timetable */}
             <Link 
-              href="/timetable"
+              href="/timetable-sample"
               className="bg-surface p-6 rounded-xl border border-highlight hover:border-accent hover:bg-highlight transition-all group"
             >
               <div className="flex items-center gap-4">
@@ -209,8 +122,9 @@ export default function Dashboard() {
               </div>
             </Link>
 
+            {/* Action 2: Manage Tasks */}
             <Link 
-              href="/tasks"
+              href="/tasks-sample"
               className="bg-surface p-6 rounded-xl border border-highlight hover:border-accent hover:bg-highlight transition-all group"
             >
               <div className="flex items-center gap-4">
@@ -224,6 +138,7 @@ export default function Dashboard() {
               </div>
             </Link>
 
+            {/* Action 3: Connect Apps */}
             <Link 
               href="/integrations"
               className="bg-surface p-6 rounded-xl border border-highlight hover:border-accent hover:bg-highlight transition-all group"
@@ -241,34 +156,53 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Upcoming Events */}
+        {/* Upcoming Events Section - SAMPLE DATA */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Upcoming Events</h2>
-            <Link href="/timetable" className="text-accent hover:text-[#B89658] text-sm font-semibold">
+            <Link href="/timetable-sample" className="text-accent hover:text-[#B89658] text-sm font-semibold">
               View All →
             </Link>
           </div>
           <div className="bg-surface rounded-xl border border-highlight p-6">
-            <div className="text-center py-8 text-textSecondary">
-              <p className="text-4xl mb-2">📅</p>
-              <p>No upcoming events for today</p>
-              <Link 
-                href="/timetable"
-                className="inline-block mt-4 text-accent hover:text-[#B89658] font-semibold"
-              >
-                Add an event
-              </Link>
+            <div className="space-y-4">
+              {/* Sample Event 1 */}
+              <div className="flex items-start justify-between pb-4 border-b border-highlight">
+                <div className="flex-1">
+                  <p className="text-textPrimary font-semibold">Team Standup Meeting</p>
+                  <p className="text-sm text-textSecondary">📅 Jan 20, 2026 at 10:00 AM</p>
+                </div>
+                <span className="text-xs bg-accent bg-opacity-20 text-accent px-3 py-1 rounded">Today</span>
+              </div>
+
+              {/* Sample Event 2 */}
+              <div className="flex items-start justify-between pb-4 border-b border-highlight">
+                <div className="flex-1">
+                  <p className="text-textPrimary font-semibold">Project Deadline</p>
+                  <p className="text-sm text-textSecondary">📅 Jan 22, 2026 at 5:00 PM</p>
+                </div>
+                <span className="text-xs bg-highlight px-3 py-1 rounded">In 2 days</span>
+              </div>
+
+              {/* Sample Event 3 */}
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <p className="text-textPrimary font-semibold">Client Review</p>
+                  <p className="text-sm text-textSecondary">📅 Jan 24, 2026 at 2:00 PM</p>
+                </div>
+                <span className="text-xs bg-highlight px-3 py-1 rounded">In 4 days</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Recent Activity */}
+        {/* Recent Activity Section - SAMPLE DATA */}
         <div>
           <h2 className="text-2xl font-bold mb-4">Recent Activity</h2>
           <div className="bg-surface rounded-xl border border-highlight p-6">
             <div className="space-y-4">
-              <div className="flex items-start gap-4 pb-4 border-b border-highlight last:border-0">
+              {/* Activity 1: Task completed */}
+              <div className="flex items-start gap-4 pb-4 border-b border-highlight">
                 <div className="text-2xl">✅</div>
                 <div className="flex-1">
                   <p className="text-textPrimary font-semibold">Task completed</p>
@@ -276,7 +210,9 @@ export default function Dashboard() {
                   <p className="text-xs text-textSecondary mt-1">2 hours ago</p>
                 </div>
               </div>
-              <div className="flex items-start gap-4 pb-4 border-b border-highlight last:border-0">
+
+              {/* Activity 2: Event added */}
+              <div className="flex items-start gap-4 pb-4 border-b border-highlight">
                 <div className="text-2xl">📅</div>
                 <div className="flex-1">
                   <p className="text-textPrimary font-semibold">Event added</p>
@@ -284,6 +220,8 @@ export default function Dashboard() {
                   <p className="text-xs text-textSecondary mt-1">5 hours ago</p>
                 </div>
               </div>
+
+              {/* Activity 3: Reminder set */}
               <div className="flex items-start gap-4">
                 <div className="text-2xl">🔔</div>
                 <div className="flex-1">
@@ -294,6 +232,16 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Sample Data Notice */}
+        <div className="mt-8 bg-highlight bg-opacity-50 border border-highlight rounded-xl p-4">
+          <p className="text-textSecondary text-sm">
+            💡 <span className="font-semibold">This is sample data.</span> Sign in to see your real, personalized dashboard with your actual tasks, events, and reminders.
+          </p>
+          <Link href="/sign-up" className="inline-block mt-3 text-accent hover:text-[#B89658] font-semibold text-sm">
+            Create an account →
+          </Link>
         </div>
       </section>
 

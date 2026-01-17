@@ -3,6 +3,15 @@ import { useRouter } from 'next/router';
 import { UserButton } from '@clerk/nextjs';
 import { useSafeUser } from '../lib/useClerkSafe';
 
+/**
+ * Navbar Component - Dynamic Navigation Bar
+ * 
+ * Features:
+ * - Shows sample pages for non-authenticated users (public demo)
+ * - Shows real pages for authenticated users (user-specific data)
+ * - UserButton for signed-in users
+ * - Login button for visitors
+ */
 export default function Navbar({ showHome = true }) {
   const router = useRouter();
   const { isSignedIn, isLoaded } = useSafeUser();
@@ -16,7 +25,7 @@ export default function Navbar({ showHome = true }) {
         </Link>
       </div>
       
-      {/* Navigation Links */}
+      {/* Navigation Links - Dynamic based on authentication status */}
       <div className="flex items-center space-x-6">
         {showHome && (
           <Link 
@@ -30,36 +39,44 @@ export default function Navbar({ showHome = true }) {
             Home
           </Link>
         )}
+        
+        {/* Timetable Link - Shows sample or real based on auth */}
         <Link 
-          href="/timetable" 
+          href={isSignedIn ? "/timetable" : "/timetable-sample"}
           className={`transition-colors ${
-            router.pathname === '/timetable' 
+            (router.pathname === '/timetable' || router.pathname === '/timetable-sample')
               ? 'text-accent font-semibold' 
               : 'text-textSecondary hover:text-accent'
           }`}
         >
           Timetable
         </Link>
+        
+        {/* Tasks Link - Shows sample or real based on auth */}
         <Link 
-          href="/tasks" 
+          href={isSignedIn ? "/tasks" : "/tasks-sample"}
           className={`transition-colors ${
-            router.pathname === '/tasks' 
+            (router.pathname === '/tasks' || router.pathname === '/tasks-sample')
               ? 'text-accent font-semibold' 
               : 'text-textSecondary hover:text-accent'
           }`}
         >
           Tasks
         </Link>
+        
+        {/* Dashboard Link - Shows sample or real based on auth */}
         <Link 
-          href="/dashboard" 
+          href={isSignedIn ? "/dashboard" : "/dashboard-sample"}
           className={`transition-colors ${
-            router.pathname === '/dashboard' 
+            (router.pathname === '/dashboard' || router.pathname === '/dashboard-sample')
               ? 'text-accent font-semibold' 
               : 'text-textSecondary hover:text-accent'
           }`}
         >
           Dashboard
         </Link>
+        
+        {/* Auth Button - UserButton for signed in, Login button for visitors */}
         {isLoaded && (
           isSignedIn ? (
             <UserButton 

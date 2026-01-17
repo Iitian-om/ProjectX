@@ -15,6 +15,9 @@ const isPublicRoute = createRouteMatcher([
   '/pricing',
   '/integrations',
   '/public-routes(.*)',
+  '/dashboard-sample(.*)',  // Demo dashboard - no auth required
+  '/tasks-sample(.*)',      // Demo tasks - no auth required
+  '/timetable-sample(.*)',  // Demo timetable - no auth required
 ]);
 
 export default clerkMiddleware(async (auth, req) => {

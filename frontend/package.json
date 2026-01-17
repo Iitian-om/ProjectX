@@ -1,6 +1,6 @@
 {
   "name": "projectx-mvp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "ProjectX is a lightweight productivity MVP to manage timetables, tasks, reminders, and calendar integrations using a Next.js frontend and n8n workflows.",
   "license": "ISC",
